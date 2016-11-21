@@ -1,19 +1,24 @@
-LatticeSize = 20;
-BacterialLattice = zeros(LatticeSize);
-Nutrients = ones(LatticeSize);
-Signals = ones(LatticeSize);
-nBacteria = 20;
-iterations = 500;
-sigma = 10;
-rho = 0.3;
-feedRate = 0.3;
+% Simulation of Complex Systems course (FFR120)
+% Chalmers University of Technology
+% Group 2
+% Main Script File
+
+LatticeSize         = 20;
+BacterialLattice    = zeros(LatticeSize);
+Nutrients           = ones(LatticeSize);
+Signals             = ones(LatticeSize);
+nBacteria           = 20;
+iterations          = 500;
+sigma               = 10;
+rho                 = 0.3;
+feedRate            = 0.3;
 
 [bacterialLocation, BacterialLattice] = InitializeBacteria(nBacteria,BacterialLattice);
 
 for iIteration = 1:iterations
-    Signals = ChangeSignal(bacterialLocation,Signals,sigma,rho);
-    [bacterialLocation, BacterialLattice] = Move(bacterialLocation,Signals,BacterialLattice,...
-        Nutrients);
+    Signals     = ChangeSignal(bacterialLocation,Signals,sigma,rho);
+    [bacterialLocation, BacterialLattice] = ...
+        Move(bacterialLocation,Signals,BacterialLattice,Nutrients);
     Nutrients = UpdateNutrients(bacterialLocation,Nutrients,feedRate);
     location(iIteration,:) = [mean(bacterialLocation(1,:)) mean(bacterialLocation(2,:))];
     spread(iIteration,:) = [std(bacterialLocation(1,:)) std(bacterialLocation(2,:))];
