@@ -25,7 +25,13 @@ for iIteration = 1:iterations
     
     %% Realtime Plot
     figure(1)
+    subplot(1,2,1);
     imagesc(BacterialLattice)
+    title('Bacteria');
+    colorbar
+    subplot(1,2,2);
+    imagesc(Nutrients)
+    title('Nutrient Lattice');
     colorbar
     drawnow update;
 
@@ -35,10 +41,8 @@ end
 figure(2)
 imagesc(Signals)
 figure(3)
-imagesc(Nutrients)
-figure(4)
 plot(spread)
-figure(5)
+figure(4)
 plot(nrBacteria)
 
 
