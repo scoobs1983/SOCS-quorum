@@ -1,8 +1,12 @@
-LatticeSize = 20;
+clc
+clear all
+close all
+
+LatticeSize = 50;
 BacterialLattice = zeros(LatticeSize);
 Nutrients = ones(LatticeSize);
 Signals = zeros(LatticeSize);
-nBacteria = 20;
+nBacteria = 100;
 iterations = 500;
 sigma = 2;
 rho = 0.3;
@@ -18,16 +22,23 @@ for iIteration = 1:iterations
     location(iIteration,:) = [mean(bacterialLocation(1,:)) mean(bacterialLocation(2,:))];
     spread(iIteration,:) = [std(bacterialLocation(1,:)) std(bacterialLocation(2,:))];
     nrBacteria(iIteration) = size(bacterialLocation,2);
+    
+    %% Realtime Plot
+    figure(1)
+    imagesc(BacterialLattice)
+    colorbar
+    drawnow update;
+
 end
-figure
-imagesc(BacterialLattice)
-figure
+
+%% Summary Plots
+figure(2)
 imagesc(Signals)
-figure
+figure(3)
 imagesc(Nutrients)
-figure
+figure(4)
 plot(spread)
-figure
+figure(5)
 plot(nrBacteria)
 
 

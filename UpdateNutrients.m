@@ -1,14 +1,15 @@
-function Nutrients = UpdateNutrients(bacterialLocation,Nutrients,feedRate)
+function Nutrients  = UpdateNutrients(bacterialLocation,Nutrients,feedRate)
 
-    nBacteria = size(bacterialLocation,2);
-    latticeSize = size(Nutrients,2);
+    nBacteria       = size(bacterialLocation,2);
+    latticeSize     = size(Nutrients,2);
+    
     for iBacteria = 1:nBacteria
-        i0 = bacterialLocation(1,iBacteria);
-        j0 = bacterialLocation(2,iBacteria);
-        Nutrients(i0,j0) = Nutrients(i0,j0)-feedRate;
-        i=ceil(20*rand);
-        j = ceil(20*rand);
-        Nutrients(i,j) = Nutrients(i,j) + feedRate;
+        i0                  = bacterialLocation(1,iBacteria);
+        j0                  = bacterialLocation(2,iBacteria);
+        Nutrients(i0,j0)    = Nutrients(i0,j0)-feedRate;
+        i                   = ceil(latticeSize*rand);
+        j                   = ceil(latticeSize*rand);
+        Nutrients(i,j)      = Nutrients(i,j) + feedRate;
     end
     
 end
