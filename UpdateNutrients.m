@@ -8,7 +8,7 @@ function Nutrients = UpdateNutrients(bacterialLocation,Nutrients,feedRate)
         Nutrients(i0,j0) = Nutrients(i0,j0)-feedRate;
         i=ceil(20*rand);
         j = ceil(20*rand);
-        Nutrients(i,j) = Nutrients(i,j) + feedRate;
+        Nutrients(i,j) = Nutrients(i,j) + 2*feedRate;
     end
     
 end
