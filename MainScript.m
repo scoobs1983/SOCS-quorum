@@ -30,6 +30,7 @@ for i = 1 : iterations
     
     %% Realtime Plots
     figure(1)
+    set(gcf,'units','normalized','outerposition',[0 0 1 1])
     subplot(1,2,1);
     imagesc(bacteriaLattice)
     colorbar
