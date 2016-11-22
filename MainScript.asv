@@ -5,10 +5,10 @@ clc
 clear all
 close all
 
-latticeSize         = input('Enter square lattice size : ');
-bacteriaLattice     = zeros(latticeSize);
-nutrients           = ones(latticeSize);
-signals             = zeros(latticeSize);
+LatticeSize         = input('Enter square lattice size : ');
+bacteriaLattice    = zeros(LatticeSize);
+nutrients           = ones(LatticeSize);
+signals             = zeros(LatticeSize);
 nBacteria           = input('Enter initial number of bacteria : ');
 iterations          = input('Enter number of time steps / iterations : ');
 sigma               = 2;
@@ -19,14 +19,14 @@ feedRate            = 0.2;
 [bacteriaLocation, bacteriaLattice] = ...
     InitializeBacteria(nBacteria, bacteriaLattice);
 
-for i = 1 : iterations
-    signals         = ChangeSignal(bacteriaLocation,signals,sigma,rho);
+for iteration = 1 : iterations
+    signals     = ChangeSignal(bacteriaLocation,signals,sigma,rho);
     [bacteriaLocation, bacteriaLattice] = ...
         Move(bacteriaLocation,signals,bacteriaLattice, nutrients);
-    nutrients       = UpdateNutrients(bacteriaLocation, nutrients, feedRate);
-    location(i, :)  = [mean(bacteriaLocation(1,:)) mean(bacteriaLocation(2,:))];
-    spread(i, :)    = [std(bacteriaLocation(1,:)) std(bacteriaLocation(2,:))];
-    nrBacteria(i)   = size(bacteriaLocation,2);
+    nutrients   = UpdateNutrients(bacteriaLocation, nutrients, feedRate);
+    location(iteration,:)   = [mean(bacteriaLocation(1,:)) mean(bacteriaLocation(2,:))];
+    spread(iteration,:)     = [std(bacteriaLocation(1,:)) std(bacteriaLocation(2,:))];
+    nrBacteria(iteration)   = size(bacteriaLocation,2);
     
     %% Realtime Plots
     figure(1)

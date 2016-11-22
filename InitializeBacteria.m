@@ -1,15 +1,23 @@
-function [bacterialLocation, BacterialLattice] = ...
-    InitializeBacteria(nBacteria,BacterialLattice)
-bacterialLocation = zeros(2,nBacteria);
+% Simulation of Complex Systems (FFR120), 2016
+% Chalmers University of Technology
+% Group 2 : PROJECT (Quorum Sensing Simulation)
 
-width = size(BacterialLattice,1);
+function [bacteriaLocation, BacteriaLattice] = ...
+    InitializeBacteria(nBacteria, BacteriaLattice)
+    % Places specified number of bacteria at random location within the
+    % bacterial lattice
 
-for iBacteria = 1:nBacteria
-    i = ceil(rand*width);
-    j = ceil(rand*width);
-    if(BacterialLattice(i,j) < 5)
-        BacterialLattice(i,j) = BacterialLattice(i,j) + 1;
-    end
-    bacterialLocation(:,iBacteria) = [i j];
+    bacteriaLocation    = zeros(2, nBacteria);
+    width               = size(BacteriaLattice, 1);
+
+    for iBacteria = 1: nBacteria
+        i   = ceil(rand*width);
+        j   = ceil(rand*width);
+        
+        if(BacteriaLattice(i, j) < 5)
+            BacteriaLattice(i, j) = BacteriaLattice(i, j) + 1;
+        end
+        bacteriaLocation(:,iBacteria) = [i j];
     
+    end
 end

@@ -22,7 +22,7 @@ function [bacteriaLocation, bacteriaLattice] = Move...
         end
         
         if(nutrients(i0,j0) < nutrientThres && ...
-                nutrients(i0, j0) >= 0.1 || nutrients(i0, j0) > 1.2)
+                nutrients(i0,j0) >= 0.1 || nutrients(i0,j0) > 1.2)
             left            = i0-1;
             right           = i0+1;
             up              = j0-1;
@@ -82,7 +82,6 @@ function [bacteriaLocation, bacteriaLattice] = Move...
             end
         end
         
-        %% Death Check
         if(nutrients(i0,j0) < 0.1)
             bacteriaLocation(:, iBacteria(i))   = [];
             temp                                = bacteriaLattice(i0,j0);
