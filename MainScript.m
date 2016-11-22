@@ -24,7 +24,7 @@ for iIteration = 1:iterations
     nrBacteria(iIteration) = size(bacterialLocation,2);
     
     %% Realtime Plot
-    figure(1)
+    set(gcf,'units','normalized','outerposition',[0 0 1 1])
     subplot(1,2,1);
     imagesc(BacterialLattice)
     title('Bacteria');
