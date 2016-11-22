@@ -4,8 +4,7 @@
 
 function nutrients  = UpdateNutrients...
     (bacteriaLocation, nutrients, feedRate)
-    % Replaces depleted nutrients with new nutrients at a random location
-    % within the nutrients lattice
+    % 
 
     nBacteria       = size(bacteriaLocation, 2);
     latticeSize     = size(nutrients, 2);

@@ -1,21 +1,27 @@
-function Signals = ChangeSignal(bacterialLocation,Signals,sigma,rho)
+% Simulation of Complex Systems (FFR120), 2016
+% Chalmers University of Technology
+% Group 2 : PROJECT (Quorum Sensing Simulation)
+
+function signals    = ChangeSignal(bacteriaLocation, signals, sigma, rho)
+    % Description : TBC
+
+    latticeSize     = size(signals,1);
+    newSignals      = zeros(latticeSize);
+    nBacteria       = size(bacteriaLocation, 2);
     
-    LatticeSize = size(Signals,1);
-    newSignals = zeros(LatticeSize);
-    nBacteria = size(bacterialLocation,2);
-    
-    for i = 1:LatticeSize
-        for j = 1:LatticeSize
-            for iBacteria = 1:nBacteria
-                i0 = bacterialLocation(1,iBacteria);
-                j0 = bacterialLocation(2,iBacteria);
+    for i = 1 : latticeSize
+        for j = 1 : latticeSize
+            for iBacteria = 1 : nBacteria
+                i0 = bacteriaLocation(1, iBacteria);
+                j0 = bacteriaLocation(2, iBacteria);
                 
                 if(i ~= i0 || j ~= j0)
-                    newSignals(i,j) = newSignals(i,j) + exp(-norm([i j]-[i0 j0])^2/(2*sigma^2));
+                    newSignals(i, j) = newSignals(i, j) + ...
+                        exp(-norm([i j]-[i0 j0])^2/(2*sigma^2));
                 end
                 
             end
-            Signals(i,j) = rho*newSignals(i,j);
+            signals(i, j) = rho*newSignals(i, j);
         
         end
     end
