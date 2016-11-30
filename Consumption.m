@@ -28,23 +28,23 @@ function [nutrients, bacteriaEnergy] =  Consumption...
             toConsume   = nResidents*feedRate;
         
             if nutrients(j) >= toConsume                                    % Updates storage according to existing feed-rates
-                for k = 1 : resBacteria                                     % Leaves feed-rates unchanged
-                    bacteriaEnergy(1, k) = bacteriaEnergy(1, k) + feedRate;
-                    bacteriaEnergy(2, k) = respRates(2);                    % Ensures all bacteria not in "survival mode"
+                for k = 1 : nResidents                                     % Leaves feed-rates unchanged
+                    bacteriaEnergy(1, resBacteria(k)) = bacteriaEnergy(1, resBacteria(k)) + feedRate;
+                    bacteriaEnergy(2, resBacteria(k)) = respRates(2);                    % Ensures all bacteria not in "survival mode"
                 end
                 nutrients(j) = nutrients(j) - nResidents*feedRate;
                 
             elseif nutrients(j) < toConsume && nutrients(j) ~= 0            % Splits existing nutrients equally amongst resident bacteria
-                for k = 1 : resBacteria
+                for k = 1 : nResidents
                     delta = nutrients(j)/nResidents;
-                    bacteriaEnergy(1, k) = bacteriaEnergy(1, k) + delta;
-                    bacteriaEnergy(2, k) = respRates(1);                    % Reduces feed-rates of all resident bacteria
+                    bacteriaEnergy(1, resBacteria(k)) = bacteriaEnergy(1, resBacteria(k)) + delta;
+                    bacteriaEnergy(2, resBacteria(k)) = respRates(1);                    % Reduces feed-rates of all resident bacteria
                 end
                 nutrients(j) = 0;                                           % Leaves nutrients empty
             
             else                
-                for k = 1 : resBacteria                                     % If there are no nutrients
-                    bacteriaEnergy(2, k) = respRates(1);               % Reduces feed-rates of all resident bacteria
+                for k = 1 : nResidents                                     % If there are no nutrients
+                    bacteriaEnergy(2, resBacteria(k)) = respRates(1);               % Reduces feed-rates of all resident bacteria
                 end
             end
         end
