@@ -23,37 +23,37 @@ function [bacteriaLocation, bacteriaLattice, bacteriaEnergy] = Move...
             nutrientThres   = 0.8;
         end
         
-        if(nutrients(i0,j0) < nutrientThres && ...
-                nutrients(i0, j0) >= deathThres || nutrients(i0, j0) > repThres)
+                %% Death Check
+        if(bacteriaEnergy(1,iBacteria(i)) < deathThres)
+            bacteriaLocation(:, iBacteria(i))   = [];
+            bacteriaEnergy(:,iBacteria(i))                 = [];
+            temp                                = bacteriaLattice(i0,j0);
+            bacteriaLattice(i0,j0)              = temp-1;
+            nBacteria                           = size(bacteriaLocation,2);
+            iBacteria                           = randperm(nBacteria);
+        end
+        i = i+1;
+        
+        if(nutrients(i0,j0) < nutrientThres || nutrients(i0, j0) > repThres)
             
             [left, right, up, down] = Boundaries(i0,j0,latticeSize);
 
             [winning, winningIndex] = Direction(i0,j0,left,right,up,down,...
                 nutrients,bacteriaLattice);
             
-            if(winning < repThres)%movement
+            if(bacteriaEnergy(1,iBacteria(i)) < repThres)%movement
                 bacteriaLattice(i0,j0) = bacteriaLattice(i0,j0) - 1;
                 bacteriaLocation(:,iBacteria(i)) = winningIndex;
                 temp = bacteriaLattice(winningIndex(1),winningIndex(2));
                 bacteriaLattice(winningIndex(1),winningIndex(2)) = temp+1;
             
-            elseif(winning >= repThres)%Reproduction
+            elseif(bacteriaEnergy(1,iBacteria(i)) >= repThres)%Reproduction
                 bacteriaLocation = [bacteriaLocation winningIndex'];
-                %bacteriaEnergy = [bacteriaEnergy bacteriaEnergy(:,iBacteria(i))];
+                bacteriaEnergy = [bacteriaEnergy bacteriaEnergy(:,iBacteria(i))];
                 temp = bacteriaLattice(winningIndex(1),winningIndex(2));
                 bacteriaLattice(winningIndex(1),winningIndex(2)) = temp+1;
             end
-        end
-        %% Death Check
-        if(nutrients(i0,j0) < deathThres)
-            bacteriaLocation(:, iBacteria(i))   = [];
-            %bacteriaEnergy(:,iBacteria(i))                 = [];
-            temp                                = bacteriaLattice(i0,j0);
-            bacteriaLattice(i0,j0)              = temp-1;
-            nBacteria                           = size(bacteriaLocation,2);
-            iBacteria                           = randperm(nBacteria);
-        end
-        i = i+1;   
+        end   
     end
         
             

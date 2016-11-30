@@ -9,7 +9,7 @@ latticeSize         = input('Enter square lattice size         : ');
 nBacteria           = input('Initial number of bacteria        : ');
 iterations          = input('Number of time steps / iterations : ');
 crowdLimit          = input('Max. bacteria at a location       : ');
-feedRate            = 0.3;                                                  % Standard nutrient Consumption per bacteria per timestep
+feedRate            = 0.5;                                                  % Standard nutrient Consumption per bacteria per timestep
 bacteriaEnergy = zeros(2,nBacteria);                       % Initialises the feed-rate for each bacteria 
 bacteriaLattice     = zeros(latticeSize);
 nutrients           = ones(latticeSize);
@@ -22,7 +22,7 @@ sigThres            = 3;
 nutrientThres       = 0.5;
 threshold = [repThres deathThres sigThres nutrientThres];
 respLow = 0.1;
-respOrd = 0.3;
+respOrd = 0.2;
 respRates = [respLow respOrd];
 
 
