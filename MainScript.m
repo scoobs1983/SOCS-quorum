@@ -5,22 +5,28 @@ clc
 clear all
 close all
 
-latticeSize         = input('Enter square lattice size : ');
+latticeSize         = input('Enter square lattice size         : ');
+nBacteria           = input('Initial number of bacteria        : ');
+iterations          = input('Number of time steps / iterations : ');
+crowdLimit          = input('Max. bacteria at a location       : ');
+feedRate            = 0.2;                                                  % Standard nutrient Consumption per bacteria per timestep
+feedRate            = ones(1, nBacteria).*feedRate;                         % Initialises the feed-rate for each bacteria 
 bacteriaLattice     = zeros(latticeSize);
 nutrients           = ones(latticeSize);
 signals             = zeros(latticeSize);
-nBacteria           = input('Enter initial number of bacteria : ');
-iterations          = input('Enter number of time steps / iterations : ');
 sigma               = 2;
 rho                 = 0.3;
-feedRate            = 0.2;
+
 
 %% Initialise Bacteria Population
 [bacteriaLocation, bacteriaLattice] = ...
-    InitializeBacteria(nBacteria, bacteriaLattice);
+    InitializeBacteria(nBacteria, bacteriaLattice, crowdLimit);
 
 for i = 1 : iterations
-    signals         = ChangeSignal(bacteriaLocation,signals,sigma,rho);
+    [bacteriaLocation, nutrients, feedRate] = Consume(bacteriaLocation, ...
+        bacteriaLattice, nutrients, feedRate, crowdLimit);
+    signals         = ChangeSignal(bacteriaLocation, signals, sigma, rho);
+    [
     [bacteriaLocation, bacteriaLattice] = ...
         Move(bacteriaLocation,signals,bacteriaLattice, nutrients);
     nutrients       = UpdateNutrients(bacteriaLocation, nutrients, feedRate);
@@ -30,7 +36,6 @@ for i = 1 : iterations
     
     %% Realtime Plots
     figure(1)
-    set(gcf,'units','normalized','outerposition',[0 0 1 1])
     subplot(1,2,1);
     imagesc(bacteriaLattice)
     colorbar
@@ -47,9 +52,13 @@ end
 %% Summary Plots
 figure(2)
 imagesc(signals)
+title('Cumulative Quorum Signal Over Area');
+
 figure(3)
 plot(spread)
+title('Std. Deviation of Bacterial Spread (Degree of Clustering)');
+
 figure(4)
 plot(nrBacteria)
-
+title('Number of Surviving Bacteria vs. Time');
 
