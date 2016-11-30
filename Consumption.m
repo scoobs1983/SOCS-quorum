@@ -44,9 +44,20 @@ function [nutrients, bacteriaEnergy] =  Consumption...
             
             else                
                 for k = 1 : resBacteria                                     % If there are no nutrients
-                    bacteriaEnergy(2, k) = feedThresholds(3);               % Reduces feed-rates of all resident bacteria
+                    bacteriaEnergy(2, k) = respRates(1);               % Reduces feed-rates of all resident bacteria
                 end
             end
         end
     end
+    
+    replenish               = 20*rand;
+    nCellsReplenished       = randi(nLocations);
+    replenishPortion        = replenish/nCellsReplenished;
+    locations               = 1 : nLocations;
+    replenishLocation       = datasample(locations, nCellsReplenished, ...
+        'Replace', false);
+    for ii = replenishLocation
+        nutrients(ii)       = nutrients(ii) + replenishPortion;
+    end
+end
        
