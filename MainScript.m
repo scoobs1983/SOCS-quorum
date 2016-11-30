@@ -23,8 +23,8 @@ rho                 = 0.3;
     InitializeBacteria(nBacteria, bacteriaLattice, crowdLimit);
 
 for i = 1 : iterations
-    [bacteriaLocation, nutrients, feedRate] = Consume(bacteriaLocation, ...
-        bacteriaLattice, nutrients, feedRate, crowdLimit);
+    %[bacteriaLocation, nutrients, feedRate] = Consume(bacteriaLocation, ...
+        %bacteriaLattice, nutrients, feedRate, crowdLimit);
     signals         = ChangeSignal(bacteriaLocation, signals, sigma, rho);
     [bacteriaLocation, bacteriaLattice] = ...
         Move(bacteriaLocation,signals,bacteriaLattice, nutrients);
@@ -35,6 +35,7 @@ for i = 1 : iterations
     
     %% Realtime Plots
     figure(1)
+    
     subplot(1,2,1);
     imagesc(bacteriaLattice)
     colorbar
