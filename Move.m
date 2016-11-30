@@ -16,6 +16,7 @@ function [bacteriaLocation, bacteriaLattice, bacteriaEnergy] = Move...
     i               = 1;    % Initialise Counter
     
     while(i < nBacteria)
+        %disp(iBacteria(i))
         i0  = bacteriaLocation(1,iBacteria(i));
         j0  = bacteriaLocation(2,iBacteria(i));
         
@@ -32,11 +33,11 @@ function [bacteriaLocation, bacteriaLattice, bacteriaEnergy] = Move...
             temp                                = bacteriaLattice(i0,j0);
             bacteriaLattice(i0,j0)              = temp-1;
             nBacteria                           = size(bacteriaLocation,2);
-            iBacteria                           = randperm(nBacteria);
-        end
+            iBacteria(i)                           = [];
+            %disp('dead')
         
         
-        if(nutrients(i0,j0) < nutrientThres || nutrients(i0, j0) > repThres)
+        elseif(nutrients(i0,j0) < nutrientThres || nutrients(i0, j0) > repThres)
             
             [left, right, up, down] = Boundaries(i0,j0,latticeSize);
 
