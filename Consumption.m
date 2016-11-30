@@ -10,7 +10,7 @@ function [nutrients, bacteriaEnergy] =  Consumption...
     % respiration rates and energy stores as necessary
 
     nLocations      = numel(bacteriaLattice);
-    nBacteria       = size(bacteriaLocation, 1);
+    nBacteria       = size(bacteriaLocation, 2);
     linIndex        = zeros(1, nBacteria);
     m               = length(bacteriaLattice(:, 1));
     n               = length(bacteriaLattice(1, :));
