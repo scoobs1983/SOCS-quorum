@@ -26,7 +26,6 @@ for i = 1 : iterations
     [bacteriaLocation, nutrients, feedRate] = Consume(bacteriaLocation, ...
         bacteriaLattice, nutrients, feedRate, crowdLimit);
     signals         = ChangeSignal(bacteriaLocation, signals, sigma, rho);
-    [
     [bacteriaLocation, bacteriaLattice] = ...
         Move(bacteriaLocation,signals,bacteriaLattice, nutrients);
     nutrients       = UpdateNutrients(bacteriaLocation, nutrients, feedRate);
