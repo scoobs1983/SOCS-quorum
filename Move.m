@@ -16,7 +16,6 @@ function [bacteriaLocation, bacteriaLattice, bacteriaEnergy] = Move...
     i               = 1;    % Initialise Counter
     
     while(i < nBacteria)
-        %disp(iBacteria(i))
         i0  = bacteriaLocation(1,iBacteria(i));
         j0  = bacteriaLocation(2,iBacteria(i));
         
@@ -32,9 +31,8 @@ function [bacteriaLocation, bacteriaLattice, bacteriaEnergy] = Move...
             bacteriaEnergy(:,iBacteria(i))                 = [];
             temp                                = bacteriaLattice(i0,j0);
             bacteriaLattice(i0,j0)              = temp-1;
-            nBacteria                           = size(bacteriaLocation,2);
+            nBacteria                           = nBacteria - 1;
             iBacteria(iBacteria == max(iBacteria))                           = [];
-            %disp('dead')
         
         
         elseif(nutrients(i0,j0) < nutrientThres || nutrients(i0, j0) > repThres)
