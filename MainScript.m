@@ -31,8 +31,6 @@ respRates = [respLow respOrd];
     InitializeBacteria(nBacteria, bacteriaLattice, crowdLimit);
 
 for i = 1 : iterations
-    %[bacteriaLocation, nutrients, feedRate] = Consume(bacteriaLocation, ...
-        %bacteriaLattice, nutrients, feedRate, crowdLimit);
     signals         = ChangeSignal(bacteriaLocation, signals, sigma, rho);
     [nutrients, bacteriaEnergy] =  Consumption...
     (bacteriaLocation, bacteriaLattice, nutrients, bacteriaEnergy, ...
@@ -41,7 +39,6 @@ for i = 1 : iterations
     [bacteriaLocation, bacteriaLattice, bacteriaEnergy] = ...
         Move(bacteriaLocation,signals,bacteriaLattice, nutrients,bacteriaEnergy,threshold);
     
-    %nutrients       = UpdateNutrients(bacteriaLocation, nutrients, feedRate);       %Uneccessary when consumption done
     location(i, :)  = [mean(bacteriaLocation(1,:)) mean(bacteriaLocation(2,:))];
     spread(i, :)    = [std(bacteriaLocation(1,:)) std(bacteriaLocation(2,:))];
     nrBacteria(i)   = size(bacteriaLocation,2);
