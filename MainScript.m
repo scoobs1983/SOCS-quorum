@@ -10,7 +10,7 @@ nBacteria           = input('Initial number of bacteria        : ');
 iterations          = input('Number of time steps / iterations : ');
 crowdLimit          = input('Max. bacteria at a location       : ');
 feedRate            = 0.2;                                                  % Standard nutrient Consumption per bacteria per timestep
-feedRate            = ones(1, nBacteria).*feedRate;                         % Initialises the feed-rate for each bacteria 
+bacteriaEnergy = zeros(2,nBacteria);                       % Initialises the feed-rate for each bacteria 
 bacteriaLattice     = zeros(latticeSize);
 nutrients           = ones(latticeSize);
 signals             = zeros(latticeSize);
@@ -31,8 +31,8 @@ for i = 1 : iterations
     %[bacteriaLocation, nutrients, feedRate] = Consume(bacteriaLocation, ...
         %bacteriaLattice, nutrients, feedRate, crowdLimit);
     signals         = ChangeSignal(bacteriaLocation, signals, sigma, rho);
-    [bacteriaLocation, bacteriaLattice, feedRate] = ...
-        Move(bacteriaLocation,signals,bacteriaLattice, nutrients,feedRate,threshold);
+    [bacteriaLocation, bacteriaLattice, bacteriaEnergy] = ...
+        Move(bacteriaLocation,signals,bacteriaLattice, nutrients,bacteriaEnergy,threshold);
     nutrients       = UpdateNutrients(bacteriaLocation, nutrients, feedRate);
     location(i, :)  = [mean(bacteriaLocation(1,:)) mean(bacteriaLocation(2,:))];
     spread(i, :)    = [std(bacteriaLocation(1,:)) std(bacteriaLocation(2,:))];

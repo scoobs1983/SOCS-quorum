@@ -2,8 +2,8 @@
 % Chalmers University of Technology
 % Group 2 : PROJECT (Quorum Sensing Simulation)
 
-function [bacteriaLocation, bacteriaLattice, feedRate] = Move...
-    (bacteriaLocation, signals, bacteriaLattice, nutrients,feedRate,threshold)
+function [bacteriaLocation, bacteriaLattice, bacteriaEnergy] = Move...
+    (bacteriaLocation, signals, bacteriaLattice, nutrients,bacteriaEnergy,threshold)
     % Description : TBC
     
     repThres        = threshold(1);
@@ -36,9 +36,10 @@ function [bacteriaLocation, bacteriaLattice, feedRate] = Move...
                 bacteriaLocation(:,iBacteria(i)) = winningIndex;
                 temp = bacteriaLattice(winningIndex(1),winningIndex(2));
                 bacteriaLattice(winningIndex(1),winningIndex(2)) = temp+1;
+            
             elseif(winning >= repThres)%Reproduction
                 bacteriaLocation = [bacteriaLocation winningIndex'];
-                feedRate = [feedRate feedRate(iBacteria(i))];
+                %bacteriaEnergy = [bacteriaEnergy bacteriaEnergy(:,iBacteria(i))];
                 temp = bacteriaLattice(winningIndex(1),winningIndex(2));
                 bacteriaLattice(winningIndex(1),winningIndex(2)) = temp+1;
             end
@@ -46,7 +47,7 @@ function [bacteriaLocation, bacteriaLattice, feedRate] = Move...
         %% Death Check
         if(nutrients(i0,j0) < deathThres)
             bacteriaLocation(:, iBacteria(i))   = [];
-            feedRate(iBacteria(i))                 = [];
+            %bacteriaEnergy(:,iBacteria(i))                 = [];
             temp                                = bacteriaLattice(i0,j0);
             bacteriaLattice(i0,j0)              = temp-1;
             nBacteria                           = size(bacteriaLocation,2);

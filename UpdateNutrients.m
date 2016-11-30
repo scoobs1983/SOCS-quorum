@@ -13,10 +13,10 @@ function nutrients  = UpdateNutrients...
     for iBacteria = 1 : nBacteria
         i0                  = bacteriaLocation(1, iBacteria);
         j0                  = bacteriaLocation(2, iBacteria);
-        nutrients(i0,j0)    = nutrients(i0, j0) - feedRate(iBacteria);
+        nutrients(i0,j0)    = nutrients(i0, j0) - feedRate;
         i                   = ceil(latticeSize*rand);
         j                   = ceil(latticeSize*rand);
-        nutrients(i,j)      = nutrients(i, j) + feedRate(iBacteria);
+        nutrients(i,j)      = nutrients(i, j) + feedRate;
     end
     
 end
