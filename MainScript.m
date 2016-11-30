@@ -16,6 +16,11 @@ nutrients           = ones(latticeSize);
 signals             = zeros(latticeSize);
 sigma               = 2;
 rho                 = 0.3;
+repThres            = 2;
+deathThres          = 0.1;
+sigThres            = 3;
+nutrientThres       = 0.5;
+threshold = [repThres deathThres sigThres nutrientThres];
 
 
 %% Initialise Bacteria Population
@@ -26,8 +31,8 @@ for i = 1 : iterations
     %[bacteriaLocation, nutrients, feedRate] = Consume(bacteriaLocation, ...
         %bacteriaLattice, nutrients, feedRate, crowdLimit);
     signals         = ChangeSignal(bacteriaLocation, signals, sigma, rho);
-    [bacteriaLocation, bacteriaLattice] = ...
-        Move(bacteriaLocation,signals,bacteriaLattice, nutrients);
+    [bacteriaLocation, bacteriaLattice, feedRate] = ...
+        Move(bacteriaLocation,signals,bacteriaLattice, nutrients,feedRate,threshold);
     nutrients       = UpdateNutrients(bacteriaLocation, nutrients, feedRate);
     location(i, :)  = [mean(bacteriaLocation(1,:)) mean(bacteriaLocation(2,:))];
     spread(i, :)    = [std(bacteriaLocation(1,:)) std(bacteriaLocation(2,:))];

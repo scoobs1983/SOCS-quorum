@@ -2,16 +2,18 @@
 % Chalmers University of Technology
 % Group 2 : PROJECT (Quorum Sensing Simulation)
 
-function [bacteriaLocation, bacteriaLattice] = Move...
-    (bacteriaLocation, signals, bacteriaLattice, nutrients)
+function [bacteriaLocation, bacteriaLattice, feedRate] = Move...
+    (bacteriaLocation, signals, bacteriaLattice, nutrients,feedRate,threshold)
     % Description : TBC
     
-    sigThres        = 3;
-    nutrientThres   = 0.5;
+    repThres        = threshold(1);
+    deathThres      = threshold(2);
+    sigThres        = threshold(3);
+    nutrientThres   = threshold(4);
     nBacteria       = size(bacteriaLocation, 2);
     latticeSize     = size(signals,1);
     iBacteria       = randperm(nBacteria);
-    i               = 1;                                                    % Initialise Counter
+    i               = 1;    % Initialise Counter
     
     while(i < nBacteria)
         i0  = bacteriaLocation(1,iBacteria(i));
@@ -22,26 +24,29 @@ function [bacteriaLocation, bacteriaLattice] = Move...
         end
         
         if(nutrients(i0,j0) < nutrientThres && ...
-                nutrients(i0, j0) >= 0.1 || nutrients(i0, j0) > 1.2)
+                nutrients(i0, j0) >= deathThres || nutrients(i0, j0) > repThres)
             
             [left, right, up, down] = Boundaries(i0,j0,latticeSize);
 
-            [winning, winningIndex] = Direction(i0,j0,left,right,up,down,nutrients);
+            [winning, winningIndex] = Direction(i0,j0,left,right,up,down,...
+                nutrients,bacteriaLattice);
             
-            if(winning < inf)%movement
+            if(winning < repThres)%movement
                 bacteriaLattice(i0,j0) = bacteriaLattice(i0,j0) - 1;
                 bacteriaLocation(:,iBacteria(i)) = winningIndex;
                 temp = bacteriaLattice(winningIndex(1),winningIndex(2));
                 bacteriaLattice(winningIndex(1),winningIndex(2)) = temp+1;
-            elseif(winning >= inf)%Reproduction
+            elseif(winning >= repThres)%Reproduction
                 bacteriaLocation = [bacteriaLocation winningIndex'];
+                feedRate = [feedRate feedRate(iBacteria(i))];
                 temp = bacteriaLattice(winningIndex(1),winningIndex(2));
                 bacteriaLattice(winningIndex(1),winningIndex(2)) = temp+1;
             end
         end
         %% Death Check
-        if(nutrients(i0,j0) < 0.1)
+        if(nutrients(i0,j0) < deathThres)
             bacteriaLocation(:, iBacteria(i))   = [];
+            feedRate(iBacteria(i))                 = [];
             temp                                = bacteriaLattice(i0,j0);
             bacteriaLattice(i0,j0)              = temp-1;
             nBacteria                           = size(bacteriaLocation,2);

@@ -1,4 +1,5 @@
-function [winning, winningIndex] = Direction(i0,j0,left,right,up,down,nutrients)
+function [winning, winningIndex] = Direction(i0,j0,left,right,up,down,...
+    nutrients,bacteriaLattice)
     winningIndex    = [i0 j0];
     winning         = 0;
 
