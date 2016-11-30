@@ -3,7 +3,7 @@
 % Group 2 : PROJECT (Quorum Sensing Simulation)
 
 function [bacteriaLocation, bacteriaLattice, bacteriaEnergy] = Move...
-    (bacteriaLocation, signals, bacteriaLattice, nutrients,bacteriaEnergy,threshold)
+    (bacteriaLocation, signals, bacteriaLattice, nutrients,bacteriaEnergy,threshold,crowdLimit)
     % Description : TBC
     
     repThres        = threshold(1);
@@ -23,6 +23,8 @@ function [bacteriaLocation, bacteriaLattice, bacteriaEnergy] = Move...
             nutrientThres   = 0.8;
         end
         
+        bacteriaEnergy(1,iBacteria(i)) = bacteriaEnergy(1,iBacteria(i)) - bacteriaEnergy(2,iBacteria(i));
+        
                 %% Death Check
         if(bacteriaEnergy(1,iBacteria(i)) < deathThres)
             bacteriaLocation(:, iBacteria(i))   = [];
@@ -32,28 +34,33 @@ function [bacteriaLocation, bacteriaLattice, bacteriaEnergy] = Move...
             nBacteria                           = size(bacteriaLocation,2);
             iBacteria                           = randperm(nBacteria);
         end
-        i = i+1;
+        
         
         if(nutrients(i0,j0) < nutrientThres || nutrients(i0, j0) > repThres)
             
             [left, right, up, down] = Boundaries(i0,j0,latticeSize);
 
-            [winning, winningIndex] = Direction(i0,j0,left,right,up,down,...
-                nutrients,bacteriaLattice);
+            winningIndex = Direction(i0,j0,left,right,up,down,...
+                nutrients,bacteriaLattice,crowdLimit);
             
-            if(bacteriaEnergy(1,iBacteria(i)) < repThres)%movement
+            if(bacteriaEnergy(1,iBacteria(i))>bacteriaEnergy(2,iBacteria(i))...
+                    && bacteriaEnergy(1,iBacteria(i)) < repThres)%movement
                 bacteriaLattice(i0,j0) = bacteriaLattice(i0,j0) - 1;
                 bacteriaLocation(:,iBacteria(i)) = winningIndex;
                 temp = bacteriaLattice(winningIndex(1),winningIndex(2));
                 bacteriaLattice(winningIndex(1),winningIndex(2)) = temp+1;
+                bacteriaEnergy(1,iBacteria(i)) = bacteriaEnergy(1,iBacteria(i)) - bacteriaEnergy(2,iBacteria(i));
             
-            elseif(bacteriaEnergy(1,iBacteria(i)) >= repThres)%Reproduction
+            elseif(bacteriaEnergy(1,iBacteria(i)) >= repThres && ...
+                    bacteriaLattice(winningIndex(1),winningIndex(2)) < crowdLimit)%Reproduction
                 bacteriaLocation = [bacteriaLocation winningIndex'];
-                bacteriaEnergy = [bacteriaEnergy bacteriaEnergy(:,iBacteria(i))];
+                bacteriaEnergy(1,iBacteria(i)) = bacteriaEnergy(1,iBacteria(i))/2;
+                bacteriaEnergy = [bacteriaEnergy bacteriaEnergy(:,iBacteria(i))/2];
                 temp = bacteriaLattice(winningIndex(1),winningIndex(2));
                 bacteriaLattice(winningIndex(1),winningIndex(2)) = temp+1;
             end
-        end   
+        end
+        i = i+1;
     end
         
             
