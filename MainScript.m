@@ -37,7 +37,7 @@ for i = 1 : iterations
     respRates, feedRate);
 
     [bacteriaLocation, bacteriaLattice, bacteriaEnergy] = ...
-        Move(bacteriaLocation,signals,bacteriaLattice, nutrients,bacteriaEnergy,threshold,crowdLimit);
+        Move(bacteriaLocation,signals,bacteriaLattice, nutrients,bacteriaEnergy,threshold);
     
     location(i, :)  = [mean(bacteriaLocation(1,:)) mean(bacteriaLocation(2,:))];
     spread(i, :)    = [std(bacteriaLocation(1,:)) std(bacteriaLocation(2,:))];

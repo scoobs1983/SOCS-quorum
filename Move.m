@@ -33,7 +33,7 @@ function [bacteriaLocation, bacteriaLattice, bacteriaEnergy] = Move...
             temp                                = bacteriaLattice(i0,j0);
             bacteriaLattice(i0,j0)              = temp-1;
             nBacteria                           = size(bacteriaLocation,2);
-            iBacteria(i)                           = [];
+            iBacteria(iBacteria == max(iBacteria))                           = [];
             %disp('dead')
         
         
