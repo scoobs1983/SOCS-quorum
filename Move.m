@@ -15,7 +15,7 @@ function [bacteriaLocation, bacteriaLattice, bacteriaEnergy] = Move...
     iBacteria       = randperm(nBacteria);
     i               = 1;    % Initialise Counter
     
-    while(i < nBacteria)
+    while(i <= nBacteria)
         i0  = bacteriaLocation(1,iBacteria(i));
         j0  = bacteriaLocation(2,iBacteria(i));
         
