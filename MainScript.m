@@ -32,7 +32,7 @@ respRates = [respLow respOrd];
     InitializeBacteria(nBacteria, bacteriaLattice, crowdLimit);
 
 for i = 1 : iterations
-    signals         = ChangeSignal(bacteriaLocation, signals, sigma, rho);
+    signals         = ChangeSignal(bacteriaLocation, signals, sigma, rho, sigThres);
     [nutrients, bacteriaEnergy] =  Consumption...
     (bacteriaLocation, bacteriaLattice, nutrients, bacteriaEnergy, ...
     respRates, feedRate);
