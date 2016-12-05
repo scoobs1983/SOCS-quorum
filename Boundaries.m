@@ -5,19 +5,19 @@ function [left, right, up, down] = Boundaries(i0,j0,latticeSize)
     down            = j0+1;
 
     if(i0 == latticeSize)
-        right       = i0;
+        right       = 1;
     end
 
     if(i0 == 1)
-        left        = i0;
+        left        = latticeSize;
     end
 
     if(j0 == latticeSize)
-        down        = j0;
+        down        = 1;
     end
 
     if(j0 == 1)
-        up          = j0;
+        up          = latticeSize;
     end
 end
 
