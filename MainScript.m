@@ -54,7 +54,7 @@ for i = 1 : iterations
     title('Bacteria');
     
     subplot(1,2,2);
-    imagesc(nutrients, [0 ]);
+    imagesc(nutrients, [0 2]);
     title('Nutrient Lattice');
     colorbar
     drawnow update;
