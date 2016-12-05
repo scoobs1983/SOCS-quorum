@@ -25,6 +25,7 @@ respLow = 0.1;
 respOrd = 0.2;
 respRates = [respLow respOrd];
 
+%% Construct 
 
 %% Initialise Bacteria Population
 [bacteriaLocation, bacteriaLattice] = ...
@@ -48,12 +49,12 @@ for i = 1 : iterations
     set(gcf, 'units','normalized','outerposition',[0 0 1 1]);
     
     subplot(1,2,1);
-    imagesc(bacteriaLattice)
-    colorbar
+    imagesc(bacteriaLattice, [0 crowdLimit]);
+    colorbar;
     title('Bacteria');
     
     subplot(1,2,2);
-    imagesc(nutrients)
+    imagesc(nutrients, [0 ]);
     title('Nutrient Lattice');
     colorbar
     drawnow update;
