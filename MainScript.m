@@ -30,6 +30,7 @@ respRates = [respLow respOrd];
 %% Initialise Bacteria Population
 [bacteriaLocation, bacteriaLattice] = ...
     InitializeBacteria(nBacteria, bacteriaLattice, crowdLimit);
+neighbours          = MooreNeighbours(bacteriaLattice);
 
 for i = 1 : iterations
     signals         = ChangeSignal(bacteriaLocation, signals, sigma, rho, sigThres);
