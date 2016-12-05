@@ -3,7 +3,7 @@
 % Group 2 : PROJECT (Quorum Sensing Simulation)
 clc
 clear all
-close all
+%close all
 
 latticeSize         = input('Enter square lattice size         : ');
 nBacteria           = input('Initial number of bacteria        : ');
@@ -12,7 +12,7 @@ crowdLimit          = input('Max. bacteria at a location       : ');
 feedRate            = 0.5;                                                  % Standard nutrient Consumption per bacteria per timestep
 bacteriaEnergy = zeros(2,nBacteria);                       % Initialises the feed-rate for each bacteria 
 bacteriaLattice     = zeros(latticeSize);
-nutrients           = ones(latticeSize);
+nutrients           = ones(latticeSize)*0.5;
 signals             = zeros(latticeSize);
 sigma               = 2;
 rho                 = 0.3;
@@ -45,19 +45,19 @@ for i = 1 : iterations
     nrBacteria(i)   = size(bacteriaLocation,2);
     
     %% Realtime Plots
-    figure(1)
-    set(gcf, 'units','normalized','outerposition',[0 0 1 1]);
-    
-    subplot(1,2,1);
-    imagesc(bacteriaLattice, [0 crowdLimit]);
-    colorbar;
-    title('Bacteria');
-    
-    subplot(1,2,2);
-    imagesc(nutrients, [0 2]);
-    title('Nutrient Lattice');
-    colorbar
-    drawnow update;
+%     figure(1)
+%     set(gcf, 'units','normalized','outerposition',[0 0 1 1]);
+%     
+%     subplot(1,2,1);
+%     imagesc(bacteriaLattice, [0 crowdLimit]);
+%     colorbar;
+%     title('Bacteria');
+%     
+%     subplot(1,2,2);
+%     imagesc(nutrients, [0 2]);
+%     title('Nutrient Lattice');
+%     colorbar
+%     drawnow update;
 
 end
 
