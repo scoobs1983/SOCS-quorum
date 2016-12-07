@@ -33,9 +33,13 @@ function [bacteriaLocation, bacteriaLattice, bacteriaEnergy] = Move...
             linIndex = sub2ind(size(bacteriaLattice), i0, j0);
             winningIndex = linIndex;                    %Stay
             movement = 0;
-            while movement == 0
+            visited = 0;
+            while movement == 0 && visited < 8
                 r = randi(9);
-                if(r > 1 && bacteriaLattice(linIndex) < crowdLimit)                                   %Move
+                visited = visited + 1;
+                if(r == 1)
+                    break
+                elseif (bacteriaLattice(linIndex) < crowdLimit)                                   %Move
                     winningIndex = neighbours(linIndex,r-1);
                     movement = 1;
                 end
