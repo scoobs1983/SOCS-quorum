@@ -53,7 +53,6 @@ function [bacteriaLocation, bacteriaLattice, bacteriaEnergy] = Move...
                 bacteriaLocation(:,iBacteria(i)) = winningIndex;
                 temp = bacteriaLattice(winningIndex(1),winningIndex(2));
                 bacteriaLattice(winningIndex(1),winningIndex(2)) = temp+1;
-                bacteriaEnergy(1,iBacteria(i)) = bacteriaEnergy(1,iBacteria(i)) - bacteriaEnergy(2,iBacteria(i));
             
             elseif(bacteriaEnergy(1,iBacteria(i)) >= repThres && ...
                     bacteriaLattice(winningIndex(1),winningIndex(2)) < crowdLimit)%Reproduction
