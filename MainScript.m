@@ -5,35 +5,37 @@ clc
 clear all
 %close all
 
+%% Parameters / Variables
 latticeSize         = input('Enter square lattice size         : ');
 nBacteria           = input('Initial number of bacteria        : ');
 iterations          = input('Number of time steps / iterations : ');
 crowdLimit          = input('Max. bacteria at a location       : ');
 feedRate            = 0.5;                                                  % Standard nutrient Consumption per bacteria per timestep
-bacteriaEnergy = zeros(2,nBacteria);                       % Initialises the feed-rate for each bacteria 
-bacteriaLattice     = zeros(latticeSize);
-nutrients           = ones(latticeSize)*0.5;
-signals             = zeros(latticeSize);
-sigma               = 2;
+baseSignal          = 2;
 rho                 = 0.3;
 repThres            = 2;
 deathThres          = 0.1;
 sigThres            = 1.5;
 nutrientThres       = 0.5;
-threshold = [repThres deathThres sigThres nutrientThres];
-respLow = 0.1;
-respOrd = 0.2;
-respRates = [respLow respOrd];
+threshold           = [repThres deathThres sigThres nutrientThres];
+respLow             = 0.1;
+respOrd             = 0.2;
+respRates           = [respLow respOrd];
 
-%% Construct 
+%% Initialise Vectors / Matrices
+bacteriaEnergy      = zeros(2,nBacteria);                                   % Initialises the feed-rate for each bacteria 
+bacteriaLattice     = zeros(latticeSize);
+nutrients           = ones(latticeSize)*0.5;
+signals             = zeros(latticeSize); 
 
-%% Initialise Bacteria Population
+%% Initialise Bacteria Population & Neighbour Registry
 [bacteriaLocation, bacteriaLattice] = ...
     InitializeBacteria(nBacteria, bacteriaLattice, crowdLimit);
 neighbours          = MooreNeighbours(bacteriaLattice);
 
 for i = 1 : iterations
-    signals         = ChangeSignal(bacteriaLocation, signals, sigma, rho, sigThres);
+    signals         = ChangeSignal(bacteriaLocation, signals, ...
+        neighbours, baseSignal, rho, sigThres);
     [nutrients, bacteriaEnergy] =  Consumption...
     (bacteriaLocation, bacteriaLattice, nutrients, bacteriaEnergy, ...
     respRates, feedRate);
