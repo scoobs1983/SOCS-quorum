@@ -63,7 +63,7 @@ function [nutrients, bacteriaEnergy] =  Consumption...
         end
     end
     
-    replenish               = (nBacteria*2)*rand;
+    replenish               = (2*sqrt(nLocations))*rand;
     nCellsReplenished       = randi(nLocations);
     replenishPortion        = replenish/nCellsReplenished;
     locations               = 1 : nLocations;
