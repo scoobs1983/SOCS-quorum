@@ -63,7 +63,7 @@ function [nutrients, bacteriaEnergy] =  Consumption...
         end
     end
     
-    replenish               = (latticeSize*2)*rand;
+    replenish               = (nBacteria*2)*rand;
     nCellsReplenished       = randi(nLocations);
     replenishPortion        = replenish/nCellsReplenished;
     locations               = 1 : nLocations;
