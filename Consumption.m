@@ -42,7 +42,7 @@ function [nutrients, bacteriaEnergy] =  Consumption...
                         bacteriaEnergy(2, resBacteria(k));
                 end
                 nutrients(j) = ...
-                    nutrients(j) - bacteriaEnergy(3, resBacteria);
+                    nutrients(j) - sum(bacteriaEnergy(3, resBacteria));
                 
             elseif nutrients(j) < toConsume && nutrients(j) ~= 0            % Splits existing nutrients equally amongst resident bacteria
                 for k = 1 : nResidents

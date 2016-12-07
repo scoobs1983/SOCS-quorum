@@ -24,8 +24,6 @@ function [bacteriaLocation, bacteriaLattice, bacteriaEnergy] = Move...
             nutrientThres   = 0.8;
         end
         
-        bacteriaEnergy(1,iBacteria(i)) = bacteriaEnergy(1,iBacteria(i)) - bacteriaEnergy(2,iBacteria(i));
-        
                 %% Death Check
         if(bacteriaEnergy(1,iBacteria(i)) < deathThres)
             bacteriaLocation(:, iBacteria(i))   = [];
