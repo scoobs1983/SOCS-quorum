@@ -10,20 +10,18 @@ latticeSize         = input('Enter square lattice size         : ');
 nBacteria           = input('Initial number of bacteria        : ');
 iterations          = input('Number of time steps / iterations : ');
 crowdLimit          = input('Max. bacteria at a location       : ');
-feedRate            = 0.5;                                                  % Standard nutrient Consumption per bacteria per timestep
-baseSignal          = 2;
+feedRates           = [0.1 0.5];                                            % 1st Element: Low respiration due to low transcription, thus also low feedrate
+respRates           = [0.1 0.3];                                            % 2nd Element: High respiration once transcription activated, enzyme enables higher feedrate
+baseSignal          = 2;                                                    % Quorum Signal at location of each bacteria
 rho                 = 0.3;
 repThres            = 2;
 deathThres          = 0.1;
 sigThres            = 1.5;
 nutrientThres       = 0.5;
 threshold           = [repThres deathThres sigThres nutrientThres];
-respLow             = 0.1;
-respOrd             = 0.2;
-respRates           = [respLow respOrd];
 
 %% Initialise Vectors / Matrices
-bacteriaEnergy      = zeros(2,nBacteria);                                   % Initialises the feed-rate for each bacteria 
+bacteriaEnergy      = zeros(3,nBacteria);                                   % Initialises the feed-rate for each bacteria 
 bacteriaLattice     = zeros(latticeSize);
 nutrients           = ones(latticeSize)*0.5;
 signals             = zeros(latticeSize); 
@@ -36,12 +34,14 @@ neighbours          = MooreNeighbours(bacteriaLattice);
 for i = 1 : iterations
     signals         = ChangeSignal(bacteriaLocation, signals, ...
         neighbours, baseSignal, rho, sigThres);
+    
     [nutrients, bacteriaEnergy] =  Consumption...
     (bacteriaLocation, bacteriaLattice, nutrients, bacteriaEnergy, ...
-    respRates, feedRate);
+    respRates, feedRates);
 
     [bacteriaLocation, bacteriaLattice, bacteriaEnergy] = ...
-        Move(bacteriaLocation,signals,bacteriaLattice, nutrients,bacteriaEnergy,threshold,crowdLimit);
+        Move(bacteriaLocation, signals, bacteriaLattice, nutrients, ...
+        bacteriaEnergy, threshold, crowdLimit);
     
     location(i, :)  = [mean(bacteriaLocation(1,:)) mean(bacteriaLocation(2,:))];
     spread(i, :)    = [std(bacteriaLocation(1,:)) std(bacteriaLocation(2,:))];
