@@ -6,22 +6,22 @@ clear all
 close all
 
 %% Establish Quorum Mode
-mode                    = input('Quorum ? (Y / N)                : ');
-if strcmp(mode, 'Y')    == 1
-    feedRates           = [0.1 0.9];                                            % 1st Element: Low respiration due to low transcription, thus also low feedrate
-    respRates           = [0.05 0.3];                                           % 2nd Element: High respiration once transcription activated, enzyme enables higher feedrate
-    sigThres            = 3;
-else
-    feedRates           = [0.75 0.75];                                            % 1st Element: Low respiration due to low transcription, thus also low feedrate
-    respRates           = [0.25 0.25];                                           % 2nd Element: High respiration once transcription activated, enzyme enables higher feedrate
-    sigThresh           = inf;
+mode                = input('Quorum = 1, No Quorum = 0          : ');
+if mode             == 1                                                    % QUORUM conditions
+    feedRates       = [0.1 0.9];                                            % 1st Element: Low respiration due to low transcription, thus also low feedrate
+    respRates       = [0.05 0.3];                                           % 2nd Element: High respiration once transcription activated, enzyme enables higher feedrate
+    sigThres        = 3;
+else                                                                        % NO QUORUM conditions
+    feedRates       = [0.6      0.6];                                       % 1st Element: Low respiration due to low transcription, thus also low feedrate
+    respRates       = [0.3      0.3];                                       % 2nd Element: High respiration once transcription activated, enzyme enables higher feedrate
+    sigThres        = inf;
 end
 
 %% Other Parameters / Variables
-latticeSize         = input('Enter square lattice size         : ');
-nBacteria           = input('Initial number of bacteria        : ');
-iterations          = input('Number of time steps / iterations : ');
-crowdLimit          = input('Max. bacteria at a location       : ');
+latticeSize         = input('Enter square lattice size          : ');
+nBacteria           = input('Initial number of bacteria         : ');
+iterations          = input('Number of time steps / iterations  : ');
+crowdLimit          = input('Max. bacteria at a location        : ');
 baseSignal          = 1;                                                    % Quorum Signal at location of each bacteria
 rho                 = 0.5;                                                  % Decay Rate
 repThres            = 1;
