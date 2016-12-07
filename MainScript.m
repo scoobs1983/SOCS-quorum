@@ -51,29 +51,34 @@ for i = 1 : iterations
     figure(1)
     set(gcf, 'units','normalized','outerposition',[0 0 1 1]);
     
-    subplot(1,2,1);
+    subplot(2, 2, 1);
     imagesc(bacteriaLattice, [0 crowdLimit]);
     colorbar;
     title('Bacteria');
     
-    subplot(1,2,2);
+    subplot(2, 2, 2);
     imagesc(nutrients, [0 2]);
     title('Nutrient Lattice');
     colorbar
-    drawnow update;
+    
+    subplot(2, 2, 3) 
+    imagesc(signals, [0 6]);
+    title('Cumulative Quorum Signal Over Area');
+    colorbar
 
+    subplot(2, 2, 4)
+    plot(nrBacteria)
+    axis([0, iterations, 0, 200]);
+    title('Number of Surviving Bacteria vs. Time');
+    xlabel('Time Steps');
+    ylabel('Number of Bacteria');
+    drawnow update;
 end
 
 %% Summary Plots
-figure(2)
-imagesc(signals)
-title('Cumulative Quorum Signal Over Area');
+% figure(2)
+% plot(spread)
+% title('Std. Deviation of Bacterial Spread (Degree of Clustering)');
 
-figure(3)
-plot(spread)
-title('Std. Deviation of Bacterial Spread (Degree of Clustering)');
 
-figure(4)
-plot(nrBacteria)
-title('Number of Surviving Bacteria vs. Time');
 
