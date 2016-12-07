@@ -3,23 +3,32 @@
 % Group 2 : PROJECT (Quorum Sensing Simulation)
 clc
 clear all
-%close all
+close all
 
-%% Parameters / Variables
+%% Establish Quorum Mode
+mode                    = input('Quorum ? (Y / N)                : ');
+if strcmp(mode, 'Y')    == 1
+    feedRates           = [0.1 0.9];                                            % 1st Element: Low respiration due to low transcription, thus also low feedrate
+    respRates           = [0.05 0.3];                                           % 2nd Element: High respiration once transcription activated, enzyme enables higher feedrate
+    sigThres            = 3;
+else
+    feedRates           = [0.75 0.75];                                            % 1st Element: Low respiration due to low transcription, thus also low feedrate
+    respRates           = [0.25 0.25];                                           % 2nd Element: High respiration once transcription activated, enzyme enables higher feedrate
+    sigThresh           = inf;
+end
+
+%% Other Parameters / Variables
 latticeSize         = input('Enter square lattice size         : ');
 nBacteria           = input('Initial number of bacteria        : ');
 iterations          = input('Number of time steps / iterations : ');
 crowdLimit          = input('Max. bacteria at a location       : ');
-feedRates           = [0.1 0.9];                                            % 1st Element: Low respiration due to low transcription, thus also low feedrate
-respRates           = [0.05 0.3];                                           % 2nd Element: High respiration once transcription activated, enzyme enables higher feedrate
 baseSignal          = 1;                                                    % Quorum Signal at location of each bacteria
-rho                 = 0.5;
+rho                 = 0.5;                                                  % Decay Rate
 repThres            = 1;
 deathThres          = 0.1;
-sigThres            = 3;
 nutrientThres       = 0.5;
 threshold           = [repThres deathThres sigThres nutrientThres];
-
+    
 %% Initialise Vectors / Matrices
 bacteriaEnergy      = zeros(3,nBacteria);                                   % Initialises the feed-rate for each bacteria 
 bacteriaLattice     = zeros(latticeSize);
@@ -37,7 +46,7 @@ for i = 1 : iterations
     
     [nutrients, bacteriaEnergy] =  Consumption...
     (bacteriaLocation, bacteriaLattice, nutrients, bacteriaEnergy, ...
-    respRates, feedRates, signals, threshold);
+    respRates, feedRates, signals, threshold, nBacteria);
 
     [bacteriaLocation, bacteriaLattice, bacteriaEnergy] = ...
         Move(bacteriaLocation,signals,bacteriaLattice, nutrients,...

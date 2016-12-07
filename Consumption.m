@@ -4,7 +4,7 @@
 
 function [nutrients, bacteriaEnergy] =  Consumption...
     (bacteriaLocation, bacteriaLattice, nutrients, bacteriaEnergy, ...
-    respRates, feedRates, signals, threshold)
+    respRates, feedRates, signals, threshold, initialBacteria)
     % Performs one round of consumption for all bacteria (according to 
     % fixed feed rate or splitting whatever is left, adjusting
     % respiration rates and energy stores as necessary
@@ -63,7 +63,7 @@ function [nutrients, bacteriaEnergy] =  Consumption...
         end
     end
     
-    replenish               = (2*sqrt(nLocations))*rand;
+    replenish               = (nLocations/nBacteria)*rand;
     nCellsReplenished       = randi(nLocations);
     replenishPortion        = replenish/nCellsReplenished;
     locations               = 1 : nLocations;
