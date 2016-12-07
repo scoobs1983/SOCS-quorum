@@ -14,8 +14,7 @@ function signals    = ChangeSignal(bacteriaLocation, signals, ...
         i0 = bacteriaLocation(1, iBacteria);
         j0 = bacteriaLocation(2, iBacteria);
         linIndex    = sub2ind([latticeSize, latticeSize], i0, j0);
-        disp(signals(linIndex))
-        if (signals(linIndex) > sigThres)
+        if signals(linIndex) > sigThres
             newSignals(linIndex)   = newSignals(linIndex) + 2*baseSignal;
             newSignals(neighbours(linIndex, :)) = ...
                 newSignals(linIndex) + baseSignal;
