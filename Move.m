@@ -18,11 +18,7 @@ function [bacteriaLocation, bacteriaLattice, bacteriaEnergy] = Move...
     
     while(i <= nBacteria)
         i0  = bacteriaLocation(1,iBacteria(i));
-        j0  = bacteriaLocation(2,iBacteria(i));
-        
-        if(signals(i0,j0) > sigThres)
-            nutrientThres   = 0.8;
-        end
+        j0  = bacteriaLocation(2,iBacteria(i));       
         
                 %% Death Check
         if(bacteriaEnergy(1,iBacteria(i)) < deathThres)
@@ -33,10 +29,7 @@ function [bacteriaLocation, bacteriaLattice, bacteriaEnergy] = Move...
             nBacteria                           = nBacteria - 1;
             iBacteria(iBacteria == max(iBacteria))                           = [];
         
-        
-        elseif(nutrients(i0,j0) < nutrientThres || nutrients(i0, j0) > repThres)
-            
-            
+        else
             linIndex = sub2ind(size(bacteriaLattice), i0, j0);
             winningIndex = linIndex;                    %Stay
             movement = 0;
