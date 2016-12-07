@@ -38,23 +38,27 @@ function [bacteriaLocation, bacteriaLattice, bacteriaEnergy] = Move...
         
         elseif(nutrients(i0,j0) < nutrientThres || nutrients(i0, j0) > repThres)
             
-            r = randi(9);
+            
             linIndex = sub2ind(size(bacteriaLattice), i0, j0);
             winningIndex = linIndex;                    %Stay
-            if(r > 1)                                   %Move
-                winningIndex = neighbours(linIndex,r-1);
+            movement = 0;
+            while movement == 0
+                r = randi(9);
+                if(r > 1 && bacteriaLattice(linIndex) < crowdLimit)                                   %Move
+                    winningIndex = neighbours(linIndex,r-1);
+                    movement = 1;
+                end
             end
             [k, j] = ind2sub(size(bacteriaLattice),winningIndex);
             winningIndex = [k j];
-                
-            if(bacteriaEnergy(1,iBacteria(i))>bacteriaEnergy(2,iBacteria(i))...
-                    && bacteriaEnergy(1,iBacteria(i)) < repThres)%movement
-                bacteriaLattice(i0,j0) = bacteriaLattice(i0,j0) - 1;
-                bacteriaLocation(:,iBacteria(i)) = winningIndex;
-                temp = bacteriaLattice(winningIndex(1),winningIndex(2));
-                bacteriaLattice(winningIndex(1),winningIndex(2)) = temp+1;
             
-            elseif(bacteriaEnergy(1,iBacteria(i)) >= repThres && ...
+            %movement
+            bacteriaLattice(i0,j0) = bacteriaLattice(i0,j0) - 1;
+            bacteriaLocation(:,iBacteria(i)) = winningIndex;
+            temp = bacteriaLattice(winningIndex(1),winningIndex(2));
+            bacteriaLattice(winningIndex(1),winningIndex(2)) = temp+1;
+            
+           if(bacteriaEnergy(1,iBacteria(i)) >= repThres && ...
                     bacteriaLattice(winningIndex(1),winningIndex(2)) < crowdLimit)%Reproduction
                 bacteriaLocation = [bacteriaLocation winningIndex'];
                 bacteriaEnergy(1,iBacteria(i)) = bacteriaEnergy(1,iBacteria(i))/2;
