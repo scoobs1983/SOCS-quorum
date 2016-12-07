@@ -12,11 +12,11 @@ iterations          = input('Number of time steps / iterations : ');
 crowdLimit          = input('Max. bacteria at a location       : ');
 feedRates           = [0.1 0.5];                                            % 1st Element: Low respiration due to low transcription, thus also low feedrate
 respRates           = [0.05 0.3];                                           % 2nd Element: High respiration once transcription activated, enzyme enables higher feedrate
-baseSignal          = 2;                                                    % Quorum Signal at location of each bacteria
+baseSignal          = 1;                                                    % Quorum Signal at location of each bacteria
 rho                 = 0.3;
 repThres            = 1;
 deathThres          = 0.1;
-sigThres            = 1.5;
+sigThres            = 2.5;
 nutrientThres       = 0.5;
 threshold           = [repThres deathThres sigThres nutrientThres];
 
