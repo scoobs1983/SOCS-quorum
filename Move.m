@@ -3,7 +3,8 @@
 % Group 2 : PROJECT (Quorum Sensing Simulation)
 
 function [bacteriaLocation, bacteriaLattice, bacteriaEnergy] = Move...
-    (bacteriaLocation, signals, bacteriaLattice, nutrients,bacteriaEnergy,threshold,crowdLimit)
+    (bacteriaLocation, signals, bacteriaLattice, nutrients,bacteriaEnergy,...
+    threshold,crowdLimit,neighbours)
     % Description : TBC
     
     repThres        = threshold(1);
@@ -37,11 +38,15 @@ function [bacteriaLocation, bacteriaLattice, bacteriaEnergy] = Move...
         
         elseif(nutrients(i0,j0) < nutrientThres || nutrients(i0, j0) > repThres)
             
-            [left, right, up, down] = Boundaries(i0,j0,latticeSize);
-
-            winningIndex = Direction(i0,j0,left,right,up,down,...
-                nutrients,bacteriaLattice,crowdLimit);
-            
+            r = randi(9);
+            linIndex = sub2ind(size(bacteriaLattice), i0, j0);
+            winningIndex = linIndex;                    %Stay
+            if(r > 1)                                   %Move
+                winningIndex = neighbours(linIndex,r-1);
+            end
+            [k, j] = ind2sub(size(bacteriaLattice),winningIndex);
+            winningIndex = [k j];
+                
             if(bacteriaEnergy(1,iBacteria(i))>bacteriaEnergy(2,iBacteria(i))...
                     && bacteriaEnergy(1,iBacteria(i)) < repThres)%movement
                 bacteriaLattice(i0,j0) = bacteriaLattice(i0,j0) - 1;

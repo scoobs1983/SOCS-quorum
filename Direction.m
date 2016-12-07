@@ -1,7 +1,6 @@
 function winningIndex = Direction(i0,j0,left,right,up,down,...
     nutrients,bacteriaLattice,crowdLimit)
     winningIndex    = [i0 j0];
-    winning         = 0;
 
     if(bacteriaLattice(left, j0) < crowdLimit && ...
             winning < nutrients(left, j0))

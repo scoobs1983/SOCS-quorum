@@ -41,26 +41,27 @@ for i = 1 : iterations
     respRates, feedRate);
 
     [bacteriaLocation, bacteriaLattice, bacteriaEnergy] = ...
-        Move(bacteriaLocation,signals,bacteriaLattice, nutrients,bacteriaEnergy,threshold,crowdLimit);
+        Move(bacteriaLocation,signals,bacteriaLattice, nutrients,...
+        bacteriaEnergy,threshold,crowdLimit,neighbours);
     
     location(i, :)  = [mean(bacteriaLocation(1,:)) mean(bacteriaLocation(2,:))];
     spread(i, :)    = [std(bacteriaLocation(1,:)) std(bacteriaLocation(2,:))];
     nrBacteria(i)   = size(bacteriaLocation,2);
     
     %% Realtime Plots
-%     figure(1)
-%     set(gcf, 'units','normalized','outerposition',[0 0 1 1]);
-%     
-%     subplot(1,2,1);
-%     imagesc(bacteriaLattice, [0 crowdLimit]);
-%     colorbar;
-%     title('Bacteria');
-%     
-%     subplot(1,2,2);
-%     imagesc(nutrients, [0 2]);
-%     title('Nutrient Lattice');
-%     colorbar
-%     drawnow update;
+    figure(1)
+    set(gcf, 'units','normalized','outerposition',[0 0 1 1]);
+    
+    subplot(1,2,1);
+    imagesc(bacteriaLattice, [0 crowdLimit]);
+    colorbar;
+    title('Bacteria');
+    
+    subplot(1,2,2);
+    imagesc(nutrients, [0 2]);
+    title('Nutrient Lattice');
+    colorbar
+    drawnow update;
 
 end
 
