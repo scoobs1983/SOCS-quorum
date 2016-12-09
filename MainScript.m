@@ -10,7 +10,7 @@ mode                = input('Quorum = 1, No Quorum = 0          : ');
 if mode             == 1                                                    % QUORUM conditions
     feedRates       = [0.1      0.9];                                       % 1st Element: Low respiration due to low transcription, thus also low feedrate
     respRates       = [0.05     0.3];                                       % 2nd Element: High respiration once transcription activated, enzyme enables higher feedrate
-    sigThres        = 3;
+    sigThres        = 5;
 else                                                                        % NO QUORUM conditions
     feedRates       = [0.6      0.6];                                       % 1st Element: Low respiration due to low transcription, thus also low feedrate
     respRates       = [0.2      0.2];                                       % 2nd Element: High respiration once transcription activated, enzyme enables higher feedrate
@@ -24,7 +24,7 @@ iterations          = input('Number of time steps / iterations  : ');
 crowdLimit          = input('Max. bacteria at a location        : ');
 baseSignal          = 1;                                                    % Quorum Signal at location of each bacteria
 rho                 = 0.10;                                                 % Decay Rate
-repThres            = 1;
+repThres            = 2;
 deathThres          = 0.1;
 nutrientThres       = 0.5;
 threshold           = [repThres deathThres sigThres nutrientThres];
@@ -68,7 +68,7 @@ for i = 1 : iterations
     title('Bacteria');
     
     subplot(2, 2, 2);
-    imagesc(nutrients, [0 5]);
+    imagesc(nutrients, [0 10]);
     title('Nutrient Lattice');
     colorbar
     
