@@ -3,16 +3,13 @@
 % Group 2 : PROJECT (Quorum Sensing Simulation)
 
 function [bacteriaLocation, bacteriaLattice, bacteriaEnergy] = Move...
-    (bacteriaLocation, signals, bacteriaLattice, nutrients,bacteriaEnergy,...
-    threshold,crowdLimit,neighbours)
+    (bacteriaLocation, signals, bacteriaLattice, ...
+    bacteriaEnergy, threshold, crowdLimit, neighbours)
     % Description : TBC
     
     repThres        = threshold(1);
     deathThres      = threshold(2);
-    sigThres        = threshold(3);
-    nutrientThres   = threshold(4);
     nBacteria       = size(bacteriaLocation, 2);
-    latticeSize     = size(signals,1);
     iBacteria       = randperm(nBacteria);
     i               = 1;    % Initialise Counter
     
@@ -20,7 +17,7 @@ function [bacteriaLocation, bacteriaLattice, bacteriaEnergy] = Move...
         i0  = bacteriaLocation(1,iBacteria(i));
         j0  = bacteriaLocation(2,iBacteria(i));       
         
-                %% Death Check
+        %% Death Check
         if(bacteriaEnergy(1,iBacteria(i)) < deathThres)
             bacteriaLocation(:, iBacteria(i))   = [];
             bacteriaEnergy(:,iBacteria(i))                 = [];
@@ -29,9 +26,10 @@ function [bacteriaLocation, bacteriaLattice, bacteriaEnergy] = Move...
             nBacteria                           = nBacteria - 1;
             iBacteria(iBacteria == max(iBacteria))                           = [];
         
+        %% If They Deserve to Live...
         else
             linIndex = sub2ind(size(bacteriaLattice), i0, j0);
-            winningIndex = linIndex;                    %Stay
+            winningIndex = linIndex;                                        %Stay
             movement = 0;
             visited = 0;
             while movement == 0 && visited < 8
@@ -39,7 +37,7 @@ function [bacteriaLocation, bacteriaLattice, bacteriaEnergy] = Move...
                 visited = visited + 1;
                 if(r == 1)
                     break
-                elseif (bacteriaLattice(linIndex) < crowdLimit)                                   %Move
+                elseif (bacteriaLattice(linIndex) < crowdLimit)             % Move
                     winningIndex = neighbours(linIndex,r-1);
                     movement = 1;
                 end
@@ -47,14 +45,15 @@ function [bacteriaLocation, bacteriaLattice, bacteriaEnergy] = Move...
             [k, j] = ind2sub(size(bacteriaLattice),winningIndex);
             winningIndex = [k j];
             
-            %movement
+            %% Movement
             bacteriaLattice(i0,j0) = bacteriaLattice(i0,j0) - 1;
             bacteriaLocation(:,iBacteria(i)) = winningIndex;
             temp = bacteriaLattice(winningIndex(1),winningIndex(2));
             bacteriaLattice(winningIndex(1),winningIndex(2)) = temp+1;
             
-           if(bacteriaEnergy(1,iBacteria(i)) >= repThres && ...
-                    bacteriaLattice(winningIndex(1),winningIndex(2)) < crowdLimit)%Reproduction
+            %% Reproduction
+            if(bacteriaEnergy(1,iBacteria(i)) >= repThres && ...
+                    bacteriaLattice(winningIndex(1),winningIndex(2)) < crowdLimit)
                 bacteriaLocation = [bacteriaLocation winningIndex'];
                 bacteriaEnergy(1,iBacteria(i)) = bacteriaEnergy(1,iBacteria(i))/2;
                 bacteriaEnergy = [bacteriaEnergy bacteriaEnergy(:,iBacteria(i))/2];

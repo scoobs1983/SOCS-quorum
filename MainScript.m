@@ -49,11 +49,13 @@ for i = 1 : iterations
     respRates, feedRates, signals, threshold, nBacteria);
 
     [bacteriaLocation, bacteriaLattice, bacteriaEnergy] = ...
-        Move(bacteriaLocation,signals,bacteriaLattice, nutrients,...
-        bacteriaEnergy,threshold,crowdLimit,neighbours);
+        Move(bacteriaLocation, signals, bacteriaLattice, ...
+        bacteriaEnergy, threshold, crowdLimit, neighbours);
     
-    location(i, :)  = [mean(bacteriaLocation(1,:)) mean(bacteriaLocation(2,:))];
-    spread(i, :)    = [std(bacteriaLocation(1,:)) std(bacteriaLocation(2,:))];
+    location(i, :)  = ...
+        [mean(bacteriaLocation(1,:)) mean(bacteriaLocation(2,:))];
+    spread(i, :)    = ...
+        [std(bacteriaLocation(1,:)) std(bacteriaLocation(2,:))];
     nrBacteria(i)   = size(bacteriaLocation,2);
     
     %% Realtime Plots
