@@ -70,9 +70,9 @@ function [nutrients, bacteriaEnergy] =  Consumption...
         nutrients(ii)       = nutrients(ii) + replenishPortion;
     end
     
-    for i = 1:ceil(sqrt(sqrt(nLocations)))
-        index = ceil(nLocations*rand);
-        nutrients(index) = nutrients(index) + 10;
-    end
+    
+    index = ceil(nLocations*rand);
+    nutrients(index) = nutrients(index) + 10;
+
 end
        
