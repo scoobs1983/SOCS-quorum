@@ -24,7 +24,7 @@ iterations          = input('Number of time steps / iterations  : ');
 crowdLimit          = input('Max. bacteria at a location        : ');
 baseSignal          = 1;                                                    % Quorum Signal at location of each bacteria
 rho                 = 0.10;                                                 % Decay Rate
-repThres            = 2;
+repThres            = 1.5;
 deathThres          = 0.1;
 nutrientThres       = 0.5;
 threshold           = [repThres deathThres sigThres nutrientThres];
@@ -58,6 +58,8 @@ for i = 1 : iterations
         [std(bacteriaLocation(1,:)) std(bacteriaLocation(2,:))];
     nrBacteria(i)   = size(bacteriaLocation,2);
     
+    aveNutrients(i) = sum(nutrients(:))/(latticeSize^2);
+    
     %% Realtime Plots
     figure(1)
     set(gcf, 'units','normalized','outerposition',[0 0 1 1]);
@@ -78,11 +80,16 @@ for i = 1 : iterations
     colorbar
 
     subplot(2, 2, 4)
-    plot(nrBacteria)
+    yyaxis left
+    plot(nrBacteria, 'b-', 'LineWidth', 1.5)
+    ylabel('Number of Bacteria');
     axis([0, iterations, 0, latticeSize*10]);
+    yyaxis right
+    plot(aveNutrients, 'r-')
+    ylabel('Average Nutrient Level');
+    axis([0, iterations, 0, 8]);
     title('Number of Surviving Bacteria vs. Time');
     xlabel('Time Steps');
-    ylabel('Number of Bacteria');
     drawnow update;
 end
 
