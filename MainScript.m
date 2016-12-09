@@ -80,16 +80,10 @@ for i = 1 : iterations
     colorbar
 
     subplot(2, 2, 4)
-    yyaxis left
     plot(nrBacteria, 'b-', 'LineWidth', 1.5)
     ylabel('Number of Bacteria');
     axis([0, iterations, 0, latticeSize*10]);
-    yyaxis right
-    plot(aveNutrients, 'r-')
-    ylabel('Average Nutrient Level');
-    axis([0, iterations, 0, 5]);
     title('Number of Surviving Bacteria vs. Time');
-    xlabel('Time Steps');
     drawnow update;
 end
 

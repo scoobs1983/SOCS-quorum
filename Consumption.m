@@ -34,7 +34,7 @@ function [nutrients, bacteriaEnergy] =  Consumption...
             nResidents  = length(resBacteria);
             toConsume   = sum(bacteriaEnergy(3, resBacteria));
             
-            if nutrients(j) < 10 || signals(j) > 3
+            if nutrients(j) < 10 || signals(j) >= threshold(3)
         
                 if nutrients(j) >= toConsume                                    % Updates storage according to existing feed-rates                                      % Leaves feed-rates unchanged
                     bacteriaEnergy(1, resBacteria) = ...
