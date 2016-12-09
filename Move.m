@@ -3,8 +3,8 @@
 % Group 2 : PROJECT (Quorum Sensing Simulation)
 
 function [bacteriaLocation, bacteriaLattice, bacteriaEnergy] = Move...
-    (bacteriaLocation, signals, bacteriaLattice, ...
-    bacteriaEnergy, threshold, crowdLimit, neighbours)
+    (bacteriaLocation, bacteriaLattice, bacteriaEnergy, ...
+    threshold, crowdLimit, neighbours)
     % Description : TBC
     
     repThres        = threshold(1);
