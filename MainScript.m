@@ -10,7 +10,7 @@ mode                = input('Quorum = 1, No Quorum = 0          : ');
 if mode             == 1                                                    % QUORUM conditions
     feedRates       = [0.1      0.9];                                       % 1st Element: Low respiration due to low transcription, thus also low feedrate
     respRates       = [0.05     0.3];                                       % 2nd Element: High respiration once transcription activated, enzyme enables higher feedrate
-    sigThres        = 3;
+    sigThres        = 4.5;
 else                                                                        % NO QUORUM conditions
     feedRates       = [0.6      0.6];                                       % 1st Element: Low respiration due to low transcription, thus also low feedrate
     respRates       = [0.2      0.2];                                       % 2nd Element: High respiration once transcription activated, enzyme enables higher feedrate
