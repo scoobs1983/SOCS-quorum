@@ -38,7 +38,7 @@ function [bacteriaLocation, bacteriaLattice, bacteriaEnergy] = Move3D...
                 if(r == 1)
                     break                                                   % Picking 1 equates to staying
                 end
-                bestIndex   = neighbours(linIndex, r - 1);
+                bestIndex   = neighbours(index, r - 1);
                 
                 if (bacteriaLattice(bestIndex) < crowdLimit)                % Move
                     movement = 1;
@@ -48,7 +48,7 @@ function [bacteriaLocation, bacteriaLattice, bacteriaEnergy] = Move3D...
 %             winningIndex = [k j];
             
             %% Movement
-            bacteriaLattice(index)          = bacteriaLattice(i0,j0) - 1;
+            bacteriaLattice(index)          = bacteriaLattice(index) - 1;
             bacteriaLocation(iBacteria(i))  = bestIndex;
             temp                            = bacteriaLattice(bestIndex);
             bacteriaLattice(bestIndex)      = temp + 1;
