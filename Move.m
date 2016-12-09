@@ -37,8 +37,9 @@ function [bacteriaLocation, bacteriaLattice, bacteriaEnergy] = Move...
                 visited = visited + 1;
                 if(r == 1)
                     break
-                elseif (bacteriaLattice(linIndex) < crowdLimit)             % Move
-                    winningIndex = neighbours(linIndex,r-1);
+                end
+                winningIndex = neighbours(linIndex,r-1);
+                if (bacteriaLattice(winningIndex) < crowdLimit)             % Move
                     movement = 1;
                 end
             end
