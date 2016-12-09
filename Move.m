@@ -7,29 +7,29 @@ function [bacteriaLocation, bacteriaLattice, bacteriaEnergy] = Move...
     threshold, crowdLimit, neighbours)
     % Description : TBC
     
-    repThres        = threshold(1);
-    deathThres      = threshold(2);
-    nBacteria       = size(bacteriaLocation, 2);
-    iBacteria       = randperm(nBacteria);
-    i               = 1;    % Initialise Counter
-    
+    reproductionThres       = threshold(1);
+    deathThres              = threshold(2);
+    nBacteria               = size(bacteriaLocation, 2);
+    iBacteria               = randperm(nBacteria);
+
+    i = 1;    % Initialise Counter
     while(i <= nBacteria)
         i0  = bacteriaLocation(1,iBacteria(i));
         j0  = bacteriaLocation(2,iBacteria(i));       
         
         %% Death Check
         if(bacteriaEnergy(1,iBacteria(i)) < deathThres)
-            bacteriaLocation(:, iBacteria(i))   = [];
-            bacteriaEnergy(:,iBacteria(i))                 = [];
+            bacteriaLocation(:, iBacteria(i))   = [];                       % Remove all trace of its existence
+            bacteriaEnergy(:,iBacteria(i))      = [];                       % Commit its soul to the aether...
             temp                                = bacteriaLattice(i0,j0);
-            bacteriaLattice(i0,j0)              = temp-1;
+            bacteriaLattice(i0,j0)              = temp - 1;
             nBacteria                           = nBacteria - 1;
-            iBacteria(iBacteria == max(iBacteria))                           = [];
+            iBacteria(iBacteria == max(iBacteria)) = [];
         
         %% If They Deserve to Live...
         else
             linIndex = sub2ind(size(bacteriaLattice), i0, j0);
-            winningIndex = linIndex;                                        %Stay
+            winningIndex = linIndex;                                        % Current location
             movement = 0;
             visited = 0;
             while movement == 0 && visited < 8
@@ -52,7 +52,7 @@ function [bacteriaLocation, bacteriaLattice, bacteriaEnergy] = Move...
             bacteriaLattice(winningIndex(1),winningIndex(2)) = temp+1;
             
             %% Reproduction
-            if(bacteriaEnergy(1,iBacteria(i)) >= repThres && ...
+            if(bacteriaEnergy(1,iBacteria(i)) >= reproductionThres && ...
                     bacteriaLattice(winningIndex(1),winningIndex(2)) < crowdLimit)
                 bacteriaLocation = [bacteriaLocation winningIndex'];
                 bacteriaEnergy(1,iBacteria(i)) = bacteriaEnergy(1,iBacteria(i))/2;
