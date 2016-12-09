@@ -3,7 +3,7 @@
 % Group 2 : PROJECT (Quorum Sensing Simulation)
 clc
 clear all
-%close all
+close all
 
 %% Establish Quorum Mode
 mode                = input('Quorum = 1, No Quorum = 0          : ');
@@ -23,8 +23,8 @@ latticeSize         = input('Enter square lattice size          : ');
 nBacteria           = input('Initial number of bacteria         : ');
 iterations          = input('Number of time steps / iterations  : ');
 crowdLimit          = input('Max. bacteria at a location        : ');
-plotting            = 0;                                                    %Plotting enable/disable
-inhibitor           = 1;
+plotting            = 1;                                                    %Plotting enable/disable
+inhibitor           = 0;
 baseSignal          = 2;                                                    % Quorum Signal at location of each bacteria
 rho                 = 0.10;                                                 % Decay Rate
 repThres            = 2;
@@ -93,12 +93,14 @@ for i = 1 : iterations
         drawnow update;
     end
 end
-%%
-figure(3)
-nutrients(proteins) = nutrients(proteins) + 10;
-imagesc(nutrients, [0 20]);
-title('Nutrient Lattice');
-colorbar
+%% For looking at inhibition
+if inhibitor
+    figure(3)
+    nutrients(proteins) = nutrients(proteins) + 10;
+    imagesc(nutrients, [0 20]);
+    title('Nutrient Lattice');
+    colorbar
+end
 
 %% Summary Plots
 % figure(2)
