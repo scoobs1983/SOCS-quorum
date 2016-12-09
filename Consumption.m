@@ -33,32 +33,29 @@ function [nutrients, bacteriaEnergy] =  Consumption...
         if isempty(resBacteria) == 0
             nResidents  = length(resBacteria);
             toConsume   = sum(bacteriaEnergy(3, resBacteria));
-        
-            if nutrients(j) >= toConsume                                    % Updates storage according to existing feed-rates
-                for k = 1 : nResidents                                      % Leaves feed-rates unchanged
-                    bacteriaEnergy(1, resBacteria(k)) = ...
-                        bacteriaEnergy(1, resBacteria(k)) + ...
-                        bacteriaEnergy(3, resBacteria(k)) - ...
-                        bacteriaEnergy(2, resBacteria(k));
-                end
-                nutrients(j) = ...
-                    nutrients(j) - sum(bacteriaEnergy(3, resBacteria));
-                
-            elseif nutrients(j) < toConsume && nutrients(j) ~= 0            % Splits existing nutrients equally amongst resident bacteria
-                for k = 1 : nResidents
-                    delta = nutrients(j)/nResidents;
-                    bacteriaEnergy(1, resBacteria(k)) = ...
-                        bacteriaEnergy(1, resBacteria(k)) + delta - ...
-                        bacteriaEnergy(2, resBacteria(k));
-                end
-                nutrients(j) = 0;                                           % Leaves nutrients empty
             
-            else                
-                for k = 1 : nResidents                                      % If there are no nutrients
-                    bacteriaEnergy(1, resBacteria(k)) = ...
-                        bacteriaEnergy(1, resBacteria(k)) - ...
-                        bacteriaEnergy(2, resBacteria(k));
+            if nutrients(j) < 10 || signals(j) > 3
+        
+                if nutrients(j) >= toConsume                                    % Updates storage according to existing feed-rates                                      % Leaves feed-rates unchanged
+                    bacteriaEnergy(1, resBacteria) = ...
+                        bacteriaEnergy(1, resBacteria) + ...
+                        bacteriaEnergy(3, resBacteria) - ...
+                        bacteriaEnergy(2, resBacteria);
+                    nutrients(j) = ...
+                        nutrients(j) - sum(bacteriaEnergy(3, resBacteria));
+
+                elseif nutrients(j) < toConsume && nutrients(j) ~= 0            % Splits existing nutrients equally amongst resident bacteria
+                    delta = nutrients(j)/nResidents;
+                    bacteriaEnergy(1, resBacteria) = ...
+                        bacteriaEnergy(1, resBacteria) + delta - ...
+                        bacteriaEnergy(2, resBacteria);
+                    nutrients(j) = 0;                                           % Leaves nutrients empty
                 end
+            
+            else                                                            % If there are no nutrients
+                bacteriaEnergy(1, resBacteria) = ...
+                    bacteriaEnergy(1, resBacteria) - ...
+                    bacteriaEnergy(2, resBacteria);
             end
         end
     end
@@ -71,6 +68,11 @@ function [nutrients, bacteriaEnergy] =  Consumption...
         'Replace', false);
     for ii = replenishLocation
         nutrients(ii)       = nutrients(ii) + replenishPortion;
+    end
+    
+    for i = 1:ceil(sqrt(sqrt(nLocations)))
+        index = ceil(nLocations*rand);
+        nutrients(index) = nutrients(index) + 10;
     end
 end
        
