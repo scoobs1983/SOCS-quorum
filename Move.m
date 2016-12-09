@@ -19,12 +19,10 @@ function [bacteriaLocation, bacteriaLattice, bacteriaEnergy] = Move...
         
         %% Death Check
         if(bacteriaEnergy(1,iBacteria(i)) < deathThres)
-            bacteriaLocation(:, iBacteria(i))   = [];                       % Remove all trace of its existence
-            bacteriaEnergy(:,iBacteria(i))      = [];                       % Commit its soul to the aether...
+            bacteriaLocation(:, iBacteria(i))   = [0; 0];                       % Remove all trace of its existence
+            bacteriaEnergy(:,iBacteria(i))      = [0; 0; 0];                       % Commit its soul to the aether...
             temp                                = bacteriaLattice(i0,j0);
             bacteriaLattice(i0,j0)              = temp - 1;
-            nBacteria                           = nBacteria - 1;
-            iBacteria(iBacteria == max(iBacteria)) = [];
         
         %% If They Deserve to Live...
         else
@@ -63,6 +61,17 @@ function [bacteriaLocation, bacteriaLattice, bacteriaEnergy] = Move...
             end
         end
         i = i+1;
+    end
+    k = 1;
+    while(k <= nBacteria)
+        if sum(bacteriaLocation(:, k)) == 0
+            bacteriaLocation(:, k)   = [];                       % Remove all trace of its existence
+            bacteriaEnergy(:,k)      = [];                       % Commit its soul to the aether...
+            k = k-1;
+            nBacteria = nBacteria - 1;
+        end
+        
+        k = k + 1;
     end
         
             
