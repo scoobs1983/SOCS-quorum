@@ -3,14 +3,15 @@
 % Group 2 : PROJECT (Quorum Sensing Simulation)
 clc
 clear all
-close all
+%close all
 
 %% Establish Quorum Mode
 mode                = input('Quorum = 1, No Quorum = 0          : ');
+sThres              = 2.5;                                                  % Sets feedThreshold and sig
 if mode             == 1                                                    % QUORUM conditions
     feedRates       = [0.1      0.9];                                       % 1st Element: Low respiration due to low transcription, thus also low feedrate
     respRates       = [0.075     0.3];                                       % 2nd Element: High respiration once transcription activated, enzyme enables higher feedrate
-    sigThres        = 4.5;
+    sigThres        = sThres;
 else                                                                        % NO QUORUM conditions
     feedRates       = [0.45      0.45];                                       % 1st Element: Low respiration due to low transcription, thus also low feedrate
     respRates       = [0.15      0.15];                                       % 2nd Element: High respiration once transcription activated, enzyme enables higher feedrate
@@ -22,12 +23,14 @@ latticeSize         = input('Enter square lattice size          : ');
 nBacteria           = input('Initial number of bacteria         : ');
 iterations          = input('Number of time steps / iterations  : ');
 crowdLimit          = input('Max. bacteria at a location        : ');
-baseSignal          = 1;                                                    % Quorum Signal at location of each bacteria
+plotting            = 0;                                                    %Plotting enable/disable
+inhibitor           = 1;
+baseSignal          = 2;                                                    % Quorum Signal at location of each bacteria
 rho                 = 0.10;                                                 % Decay Rate
 repThres            = 2;
 deathThres          = 0.1;
 nutrientThres       = 0.5;
-feedThres           = 4.5;
+feedThres           = sThres;
 threshold           = [repThres deathThres sigThres nutrientThres feedThres];
     
 %% Initialise Vectors / Matrices
@@ -35,6 +38,7 @@ bacteriaEnergy      = ones(3,nBacteria)*0.2;                                % In
 bacteriaLattice     = zeros(latticeSize);
 nutrients           = ones(latticeSize)*0.5;
 signals             = zeros(latticeSize); 
+proteins            = [];
 
 %% Initialise Bacteria Population & Neighbour Registry
 [bacteriaLocation, bacteriaLattice] = ...
@@ -43,11 +47,11 @@ neighbours          = MooreNeighbours(bacteriaLattice);
 
 for i = 1 : iterations
     signals         = ChangeSignal(bacteriaLocation, signals, ...
-        neighbours, baseSignal, rho, sigThres);
+        neighbours, baseSignal, rho, sigThres,inhibitor);
     
-    [nutrients, bacteriaEnergy] =  Consumption...
+    [nutrients, bacteriaEnergy, proteins] =  Consumption...
     (bacteriaLocation, bacteriaLattice, nutrients, bacteriaEnergy, ...
-    respRates, feedRates, signals, threshold, nBacteria);
+    respRates, feedRates, signals, threshold, nBacteria, proteins);
 
     [bacteriaLocation, bacteriaLattice, bacteriaEnergy] = ...
         Move(bacteriaLocation, bacteriaLattice, bacteriaEnergy, ...
@@ -62,31 +66,39 @@ for i = 1 : iterations
     aveNutrients(i) = sum(nutrients(:))/(latticeSize^2);
     
     %% Realtime Plots
-    figure(1)
-    set(gcf, 'units','normalized','outerposition',[0 0 1 1]);
-    
-    subplot(2, 2, 1);
-    imagesc(bacteriaLattice, [0 crowdLimit]);
-    colorbar;
-    title('Bacteria');
-    
-    subplot(2, 2, 2);
-    imagesc(nutrients, [0 10]);
-    title('Nutrient Lattice');
-    colorbar
-    
-    subplot(2, 2, 3) 
-    imagesc(signals, [0 6]);
-    title('Cumulative Quorum Signal Over Area');
-    colorbar
+    if(plotting == 1)
+        figure(1)
+        set(gcf, 'units','normalized','outerposition',[0 0 1 1]);
 
-    subplot(2, 2, 4)
-    plot(nrBacteria, 'b-', 'LineWidth', 1.5)
-    ylabel('Number of Bacteria');
-    axis([0, iterations, 0, latticeSize*10]);
-    title('Number of Surviving Bacteria vs. Time');
-    drawnow update;
+        subplot(2, 2, 1);
+        imagesc(bacteriaLattice, [0 crowdLimit]);
+        colorbar;
+        title('Bacteria');
+
+        subplot(2, 2, 2);
+        imagesc(nutrients, [0 10]);
+        title('Nutrient Lattice');
+        colorbar
+
+        subplot(2, 2, 3) 
+        imagesc(signals, [-3 6]);
+        title('Cumulative Quorum Signal Over Area');
+        colorbar
+
+        subplot(2, 2, 4)
+        plot(nrBacteria, 'b-', 'LineWidth', 1.5)
+        ylabel('Number of Bacteria');
+        axis([0, iterations, 0, latticeSize*10]);
+        title('Number of Surviving Bacteria vs. Time');
+        drawnow update;
+    end
 end
+%%
+figure(3)
+nutrients(proteins) = nutrients(proteins) + 10;
+imagesc(nutrients, [0 20]);
+title('Nutrient Lattice');
+colorbar
 
 %% Summary Plots
 % figure(2)

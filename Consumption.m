@@ -2,9 +2,9 @@
 % Chalmers University of Technology
 % Group 2 : PROJECT (Quorum Sensing Simulation)
 
-function [nutrients, bacteriaEnergy] =  Consumption...
+function [nutrients, bacteriaEnergy, proteins] =  Consumption...
     (bacteriaLocation, bacteriaLattice, nutrients, bacteriaEnergy, ...
-    respRates, feedRates, signals, threshold, initialBacteria)
+    respRates, feedRates, signals, threshold, initialBacteria, proteins)
     % Performs one round of consumption for all bacteria (according to 
     % fixed feed rate or splitting whatever is left, adjusting
     % respiration rates and energy stores as necessary
@@ -29,13 +29,17 @@ function [nutrients, bacteriaEnergy] =  Consumption...
     
     for j = 1 : nLocations
         [~, resBacteria]    = find(linIndex == j);
-                
+        
+        if(signals(j) >= threshold(5)) && ~isempty(proteins(proteins == j))
+            proteins(proteins == j) = [];
+        end
+        
         if isempty(resBacteria) == 0
             nResidents  = length(resBacteria);
             toConsume   = sum(bacteriaEnergy(3, resBacteria));
             
-            if nutrients(j) < 10 || signals(j) >= threshold(5)
-        
+            if isempty(proteins(proteins == j))  %searches proteins for j
+                
                 if nutrients(j) >= toConsume                                    % Updates storage according to existing feed-rates                                      % Leaves feed-rates unchanged
                     bacteriaEnergy(1, resBacteria) = ...
                         bacteriaEnergy(1, resBacteria) + ...
@@ -72,6 +76,7 @@ function [nutrients, bacteriaEnergy] =  Consumption...
     
     index = ceil(nLocations*rand);
     nutrients(index) = nutrients(index) + 10;
+    proteins = [proteins index];
 
 end
        
