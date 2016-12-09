@@ -30,7 +30,7 @@ nutrientThres       = 0.5;
 threshold           = [repThres deathThres sigThres nutrientThres];
     
 %% Initialise Vectors / Matrices
-bacteriaEnergy      = zeros(3,nBacteria);                                   % Initialises the feed-rate for each bacteria 
+bacteriaEnergy      = ones(3,nBacteria)*0.2;                                % Initialises the feed-rate for each bacteria 
 bacteriaLattice     = zeros(latticeSize);
 nutrients           = ones(latticeSize)*0.5;
 signals             = zeros(latticeSize); 
@@ -87,7 +87,7 @@ for i = 1 : iterations
     yyaxis right
     plot(aveNutrients, 'r-')
     ylabel('Average Nutrient Level');
-    axis([0, iterations, 0, 8]);
+    axis([0, iterations, 0, 5]);
     title('Number of Surviving Bacteria vs. Time');
     xlabel('Time Steps');
     drawnow update;
