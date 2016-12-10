@@ -4,7 +4,7 @@
 
 function [nutrients, bacteriaEnergy] =  Consumption3D...
     (bacteriaLocation, bacteriaLattice, nutrients, bacteriaEnergy, ...
-    respRates, feedRates, signals, threshold, initialBacteria)
+    respRates, feedRates, signals, threshold, nutrientFlux, locations)
     % Performs one round of consumption for all bacteria (according to 
     % fixed feed rate or splitting whatever is left, adjusting
     % respiration rates and energy stores as necessary
@@ -55,18 +55,17 @@ function [nutrients, bacteriaEnergy] =  Consumption3D...
         end
     end
     
-    replenish               = (initialBacteria)*rand*rand;
-    nCellsReplenished       = randi(nLocations);
+    replenish               = (nutrientFlux^0.5)*rand;
+    nCellsReplenished       = randi(ceil(nLocations^(0.3)));
     replenishPortion        = replenish/nCellsReplenished;
-    locations               = 1 : nLocations;
     replenishLocation       = datasample(locations, nCellsReplenished, ...
         'Replace', false);
     for ii = replenishLocation
         nutrients(ii)       = nutrients(ii) + replenishPortion;
     end
     
-    index = ceil(nLocations*rand);
-    nutrients(index) = nutrients(index) + 10;
+%     index = ceil(nLocations*rand);
+%     nutrients(index) = nutrients(index) + 10;
 
 end
        
