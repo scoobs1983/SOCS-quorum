@@ -12,8 +12,7 @@ mode                = input('Quorum = 1, No Quorum = 0          : ');
 if mode             == 1                                                    % QUORUM conditions
     feedRates       = [0.500    1.500];                                     % 1st Element: Low respiration due to low transcription, thus also low feedrate
     respRates       = [0.300    1.000];                                     % 2nd Element: High respiration once transcription activated, enzyme enables higher feedrate
-    sigThr
-    es        = 5;
+    sigThres        = 5;
     initialEnergy   = 3*respRates(1);                                       % So each bacteria can initially survive at least 3 time-steps
 else                                                                        % NO QUORUM conditions
     feedRates       = [1.000    1.000];                                     % Bacteria have same feed & respiration rates regardless of neighbours
@@ -44,7 +43,7 @@ nutrientColour      = [255, 69, 0]./255;                                    % Or
 signalColour        = [0, 206, 209]./255;                                   % Dark turquoise for plotting
     
 %% Initialise Vectors / Matrices
-bacteriaEnergy      = ones(3, nBacteria);                              % 1st row = energy store, 2nd row = respiration rate, 3rd row = feed-rate 
+bacteriaEnergy      = ones(3, nBacteria);                                   % 1st row = energy store, 2nd row = respiration rate, 3rd row = feed-rate 
 bacteriaEnergy(1, :)= initialEnergy;
 bacteriaEnergy(2, :)= respRates(1);
 bacteriaEnergy(3, :)= feedRates(1);
