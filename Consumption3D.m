@@ -55,7 +55,7 @@ function [nutrients, bacteriaEnergy] =  Consumption3D...
         end
     end
     
-    replenish               = (nutrientFlux^0.5)*rand;
+    replenish               = (nutrientFlux)*rand;
     nCellsReplenished       = randi(ceil(nLocations^(0.3)));
     replenishPortion        = replenish/nCellsReplenished;
     replenishLocation       = datasample(locations, nCellsReplenished, ...

@@ -11,7 +11,6 @@ function [bacteriaLocation, bacteriaLattice, bacteriaEnergy] = Move3D...
     deathThres              = threshold(2);
     nBacteria               = length(bacteriaLocation);
     iBacteria               = randperm(nBacteria);
-    choices                 = 1 : 27;
 
     i = 1;    % Initialise Counter
     while(i <= nBacteria)
@@ -52,7 +51,7 @@ function [bacteriaLocation, bacteriaLattice, bacteriaEnergy] = Move3D...
                 bacteriaEnergy(1, iBacteria(i)) = ...
                     bacteriaEnergy(1, iBacteria(i))/2;
                 bacteriaEnergy = ...
-                    [bacteriaEnergy bacteriaEnergy(:, iBacteria(i))/2];
+                    [bacteriaEnergy bacteriaEnergy(:, iBacteria(i))];
                 temp                        = bacteriaLattice(bestIndex);
                 bacteriaLattice(bestIndex)  = temp + 1;
             end
