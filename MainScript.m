@@ -9,12 +9,12 @@ close all
 mode                = input('Quorum = 1, No Quorum = 0          : ');
 sThres              = 2.5;                                                  % Sets feedThreshold and sig
 if mode             == 1                                                    % QUORUM conditions
-    feedRates       = [0.1      0.9];                                       % 1st Element: Low respiration due to low transcription, thus also low feedrate
-    respRates       = [0.075     0.3];                                       % 2nd Element: High respiration once transcription activated, enzyme enables higher feedrate
+    feedRates       = [0.2      0.6];                                       % 1st Element: Low respiration due to low transcription, thus also low feedrate
+    respRates       = [0.05     0.15];                                       % 2nd Element: High respiration once transcription activated, enzyme enables higher feedrate
     sigThres        = sThres;
 else                                                                        % NO QUORUM conditions
-    feedRates       = [0.45      0.45];                                       % 1st Element: Low respiration due to low transcription, thus also low feedrate
-    respRates       = [0.15      0.15];                                       % 2nd Element: High respiration once transcription activated, enzyme enables higher feedrate
+    feedRates       = [0.6      0.6];                                       % 1st Element: Low respiration due to low transcription, thus also low feedrate
+    respRates       = [0.1      0.1];                                       % 2nd Element: High respiration once transcription activated, enzyme enables higher feedrate
     sigThres        = inf;
 end
 
@@ -24,7 +24,7 @@ nBacteria           = input('Initial number of bacteria         : ');
 iterations          = input('Number of time steps / iterations  : ');
 crowdLimit          = input('Max. bacteria at a location        : ');
 plotting            = 0;                                                    %Plotting enable/disable
-inhibitor           = 1;
+inhibitor           = 0;
 baseSignal          = 2;                                                    % Quorum Signal at location of each bacteria
 rho                 = 0;                                                 % Decay Rate
 repThres            = 2;
