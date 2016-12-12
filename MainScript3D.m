@@ -10,12 +10,12 @@ set(0, 'defaultfigurecolor', [1, 1, 1]);
 %% Establish Quorum Mode
 mode                = input('Quorum = 1, No Quorum = 0          : ');
 if mode             == 1                                                    % QUORUM conditions
-    feedRates       = [0.500    1.500];                                     % 1st Element: Low respiration due to low transcription, thus also low feedrate
-    respRates       = [0.300    1.000];                                     % 2nd Element: High respiration once transcription activated, enzyme enables higher feedrate
-    sigThres        = 5;
+    feedRates       = [1.000    3.000];                                     % 1st Element: Low respiration due to low transcription, thus also low feedrate
+    respRates       = [0.600    1.800];                                     % 2nd Element: High respiration once transcription activated, enzyme enables higher feedrate
+    sigThres        = 4;
     initialEnergy   = 3*respRates(1);                                       % So each bacteria can initially survive at least 3 time-steps
 else                                                                        % NO QUORUM conditions
-    feedRates       = [1.000    1.000];                                     % Bacteria have same feed & respiration rates regardless of neighbours
+    feedRates       = [2.000    2.000];                                     % Bacteria have same feed & respiration rates regardless of neighbours
     respRates       = [0.500    0.500];                                     % Thus, they can always eat a lot, but their respiration rates cannot go 'dormant'
     sigThres        = inf;
     initialEnergy   = 3*respRates(1);                                       % So each bacteria can initially survive at least 3 time-steps
@@ -31,7 +31,7 @@ locations           = 1 : nElements;
 nutrientFlux        = latticeSize;
 dim                 = latticeSize;
 baseSignal          = 1;                                                    % Quorum Signal at location of each bacteria
-reproductionThres   = 2;
+reproductionThres   = 1.5;
 deathThres          = 0.1;
 nutrientThres       = 0.5;
 feedThres           = 4.5;
@@ -68,6 +68,7 @@ totalSignal(1)      = sum(signals(:));
 
 %% Begin Time-Evolution
 for i = 1 : iterations
+    % disp(i);
     signals         = ChangeSignal3D(bacteriaLocation, signals, ...
         neighbours, baseSignal, sigThres);
     
@@ -79,20 +80,20 @@ for i = 1 : iterations
         Move3D(bacteriaLocation, bacteriaLattice, bacteriaEnergy, ...
         threshold, crowdLimit, neighbours);
     
-    %% Realtime 3D Plot
-    [Y, X, Z]       = ind2sub([dim, dim, dim], bacteriaLocation);
-    scatter3(Y, X, Z, 80, 'MarkerEdgeColor', 'none', 'MarkerFaceColor',...
-        bacteriaColour, 'MarkerFaceAlpha', transparency) 
-    axis([0, latticeSize, 0, latticeSize, 0, latticeSize])
-    xlabel('X', 'FontSize', 10, 'FontWeight', 'bold', 'FontName',...
-        'Times New Roman')
-    ylabel('Y', 'FontSize', 10, 'FontWeight', 'bold', 'FontName',...
-        'Times New Roman')
-    zlabel('Z', 'FontSize', 10, 'FontWeight', 'bold', 'FontName',...
-        'Times New Roman')
-    title('Bacteria in 3D Volume (periodic boundaries)', 'FontSize', 12,...
-        'FontWeight', 'bold', 'FontName', 'Times New Roman') 
-    drawnow update;
+%     %% Realtime 3D Plot
+%     [Y, X, Z]       = ind2sub([dim, dim, dim], bacteriaLocation);
+%     scatter3(Y, X, Z, 80, 'MarkerEdgeColor', 'none', 'MarkerFaceColor',...
+%         bacteriaColour, 'MarkerFaceAlpha', transparency) 
+%     axis([0, latticeSize, 0, latticeSize, 0, latticeSize])
+%     xlabel('X', 'FontSize', 10, 'FontWeight', 'bold', 'FontName',...
+%         'Times New Roman')
+%     ylabel('Y', 'FontSize', 10, 'FontWeight', 'bold', 'FontName',...
+%         'Times New Roman')
+%     zlabel('Z', 'FontSize', 10, 'FontWeight', 'bold', 'FontName',...
+%         'Times New Roman')
+%     title('Bacteria in 3D Volume (periodic boundaries)', 'FontSize', 12,...
+%         'FontWeight', 'bold', 'FontName', 'Times New Roman') 
+%     drawnow update;
     
 %     %% Record Plots as Frames for a Movie
 %     bacteriaMovie(i)    = getframe;

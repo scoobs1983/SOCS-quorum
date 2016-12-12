@@ -53,9 +53,9 @@ for i = 1 : nElements
     
     %% Record Linear Index of Lower Neighbour
     if y ~= dim  
-        neighbours(i, 5)    = sub2ind([dim, dim, dim], y + 1, x);                    
+        neighbours(i, 5)    = sub2ind([dim, dim, dim], y + 1, x, z);                    
     elseif y == dim
-        neighbours(i, 5)    = sub2ind([dim, dim, dim], 1, x);               % Ensure Periodic Boundary Conditions
+        neighbours(i, 5)    = sub2ind([dim, dim, dim], 1, x, z);            % Ensure Periodic Boundary Conditions
     end
     
     %% Record Linear Index of Lower-Left Neighbour

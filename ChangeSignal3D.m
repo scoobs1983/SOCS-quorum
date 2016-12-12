@@ -13,9 +13,9 @@ function signals    = ChangeSignal3D(bacteriaLocation, signals, ...
     for iBacteria = 1 : nBacteria
         index    = bacteriaLocation(iBacteria);
         if signals(index) > sigThres
-            newSignals(index)   = newSignals(index) + 2*baseSignal;
+            newSignals(index)   = newSignals(index) + 3*baseSignal;
             newSignals(neighbours(index, :)) = ...
-                newSignals(index) + baseSignal;
+                newSignals(index) + 1.5*baseSignal;
         else
             newSignals(index)   = newSignals(index) + baseSignal;
             newSignals(neighbours(index, :)) = ...
