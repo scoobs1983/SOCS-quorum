@@ -10,8 +10,8 @@ set(0, 'defaultfigurecolor', [1, 1, 1]);
 %% Establish Quorum Mode
 mode                = input('Quorum = 1, No Quorum = 0          : ');
 if mode             == 1                                                    % QUORUM conditions
-    feedRates       = [1.000    3.000];                                     % 1st Element: Low respiration due to low transcription, thus also low feedrate
-    respRates       = [0.600    1.800];                                     % 2nd Element: High respiration once transcription activated, enzyme enables higher feedrate
+    feedRates       = [0.600    1.800];                                     % 1st Element: Low respiration due to low transcription, thus also low feedrate
+    respRates       = [0.300    0.900];                                     % 2nd Element: High respiration once transcription activated, enzyme enables higher feedrate
     sigThres        = 4;
     initialEnergy   = 3*respRates(1);                                       % So each bacteria can initially survive at least 3 time-steps
 else                                                                        % NO QUORUM conditions
@@ -53,6 +53,7 @@ nutrients           = rand(1, nElements);
 totalBacteria       = zeros(1, iterations + 1);
 totalNutrients      = zeros(1, iterations + 1);
 totalSignal         = zeros(1, iterations + 1);
+timeAxis            = 0 : iterations;
 
 %% Initialise Bacteria Population & Neighbour Registry
 [bacteriaLocation, bacteriaLattice] = ...
@@ -80,51 +81,68 @@ for i = 1 : iterations
         Move3D(bacteriaLocation, bacteriaLattice, bacteriaEnergy, ...
         threshold, crowdLimit, neighbours);
     
-%     %% Realtime 3D Plot
-%     [Y, X, Z]       = ind2sub([dim, dim, dim], bacteriaLocation);
-%     scatter3(Y, X, Z, 80, 'MarkerEdgeColor', 'none', 'MarkerFaceColor',...
-%         bacteriaColour, 'MarkerFaceAlpha', transparency) 
-%     axis([0, latticeSize, 0, latticeSize, 0, latticeSize])
-%     xlabel('X', 'FontSize', 10, 'FontWeight', 'bold', 'FontName',...
-%         'Times New Roman')
-%     ylabel('Y', 'FontSize', 10, 'FontWeight', 'bold', 'FontName',...
-%         'Times New Roman')
-%     zlabel('Z', 'FontSize', 10, 'FontWeight', 'bold', 'FontName',...
-%         'Times New Roman')
-%     title('Bacteria in 3D Volume (periodic boundaries)', 'FontSize', 12,...
-%         'FontWeight', 'bold', 'FontName', 'Times New Roman') 
-%     drawnow update;
-    
-%     %% Record Plots as Frames for a Movie
-%     bacteriaMovie(i)    = getframe;
-    
     %% Summary Data
     totalBacteria(i + 1)    = length(bacteriaLocation);
     totalNutrients(i + 1)   = sum(nutrients(:));
     totalSignal(i + 1)      = sum(signals(:));
+    
+    %% Realtime Plots
+    [Y, X, Z]       = ind2sub([dim, dim, dim], bacteriaLocation);
+    figure(1)
+    subplot(1, 3, 1)
+    scatter3(Y, X, Z, 80, 'MarkerEdgeColor', 'none', 'MarkerFaceColor',...
+        bacteriaColour, 'MarkerFaceAlpha', transparency) 
+    axis([0, latticeSize, 0, latticeSize, 0, latticeSize])
+    xlabel('X', 'FontSize', 10, 'FontWeight', 'bold', 'FontName',...
+        'Times New Roman')
+    ylabel('Y', 'FontSize', 10, 'FontWeight', 'bold', 'FontName',...
+        'Times New Roman')
+    zlabel('Z', 'FontSize', 10, 'FontWeight', 'bold', 'FontName',...
+        'Times New Roman')
+    title('Bacteria in 3D Volume (periodic boundaries)', 'FontSize', 12,...
+        'FontWeight', 'bold', 'FontName', 'Times New Roman') 
+        
+    subplot(1, 3, 2)
+    plot(timeAxis(1: i + 1), totalBacteria(1 : i + 1), ...
+        'Color', bacteriaColour, 'LineWidth', 2);
+    title('Total Bacteria', 'FontSize', 10,...
+        'FontWeight', 'bold', 'FontName', 'Times New Roman') 
+    axis([0, iterations, 0, 2000]);
+    
+    subplot(1, 3, 3)
+    plot(timeAxis(1 : i + 1), totalNutrients(1 : i + 1), ...
+        'Color', nutrientColour, 'LineWidth', 2);
+    title('Total Nutrients', 'FontSize', 10,...
+          'FontWeight', 'bold', 'FontName', 'Times New Roman') 
+    axis([0, iterations, 0, 20000]);
+    
+    drawnow update;
+
+%     %% Record Plots as Frames for a Movie
+%     bacteriaMovie(i)    = getframe;
+    
 end
 
 %% Summary Plot(s)
-timeAxis                = 0 : iterations;
-figure(2)
+% figure(2)
 
-subplot(3, 1, 1)
-plot(timeAxis, totalBacteria, 'Color', bacteriaColour, 'LineWidth', 2);
-title('Total Bacteria', 'FontSize', 10,...
-        'FontWeight', 'bold', 'FontName', 'Times New Roman') 
-axis([0, iterations, 0, 1.1*max(totalBacteria)]);
-
-subplot(3, 1, 2)
-semilogy(timeAxis, totalNutrients, 'Color', nutrientColour, 'LineWidth', 2);
-title('Total Nutrients', 'FontSize', 10,...
-        'FontWeight', 'bold', 'FontName', 'Times New Roman') 
-axis([0, iterations, 0.9*min(totalNutrients), 1.1*max(totalNutrients)]);
-
-subplot(3, 1, 3)
-plot(timeAxis, totalSignal, 'Color', signalColour, 'LineWidth', 2);
-title('Total Signal', 'FontSize', 10,...
-        'FontWeight', 'bold', 'FontName', 'Times New Roman') 
-axis([0, iterations, 0.9*min(totalSignal), 1.1*max(totalSignal)]);
+% subplot(3, 1, 1)
+% plot(timeAxis, totalBacteria, 'Color', bacteriaColour, 'LineWidth', 2);
+% title('Total Bacteria', 'FontSize', 10,...
+%         'FontWeight', 'bold', 'FontName', 'Times New Roman') 
+% axis([0, iterations, 0, 1.1*max(totalBacteria)]);
+% 
+% subplot(3, 1, 2)
+% semilogy(timeAxis, totalNutrients, 'Color', nutrientColour, 'LineWidth', 2);
+% title('Total Nutrients', 'FontSize', 10,...
+%         'FontWeight', 'bold', 'FontName', 'Times New Roman') 
+% axis([0, iterations, 0.9*min(totalNutrients), 1.1*max(totalNutrients)]);
+% 
+% subplot(3, 1, 3)
+% plot(timeAxis, totalSignal, 'Color', signalColour, 'LineWidth', 2);
+% title('Total Signal', 'FontSize', 10,...
+%         'FontWeight', 'bold', 'FontName', 'Times New Roman') 
+% axis([0, iterations, 0.9*min(totalSignal), 1.1*max(totalSignal)]);
 
 % %% Save Movie
 % % Saves an *.avi* file into whatever is set as your 'Current Folder'. 
