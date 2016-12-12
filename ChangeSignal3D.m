@@ -3,10 +3,10 @@
 % Group 2 : PROJECT (Quorum Sensing Simulation)
 
 function signals    = ChangeSignal3D(bacteriaLocation, signals, ...
-    neighbours, baseSignal, rho, sigThres)
+    neighbours, baseSignal, sigThres)
     % Description : TBC
 
-    latticeSize     = size(signals,1);
+    latticeSize     = size(signals, 1);
     newSignals      = zeros(latticeSize, latticeSize, latticeSize);
     nBacteria       = length(bacteriaLocation);
     
@@ -22,7 +22,7 @@ function signals    = ChangeSignal3D(bacteriaLocation, signals, ...
                 newSignals(index) + 0.5*baseSignal;
         end
     end
-    signals = rho*signals + newSignals;                                     % Decay Rate of Signals
-       
+    signals     = newSignals;
+
 end
      
