@@ -5,7 +5,7 @@
 function [nutrients, bacteriaEnergy] =  Consumption3D...
     (bacteriaLocation, bacteriaLattice, nutrients, bacteriaEnergy, ...
     respRates, feedRates, signals, threshold, nutrientFlux, locations, ...
-    mode, competeStatus)
+    competeStatus, mode)
     % Performs one round of consumption for all bacteria (according to 
     % fixed feed rate or splitting whatever is left, adjusting
     % respiration rates and energy stores as necessary
@@ -25,8 +25,19 @@ function [nutrients, bacteriaEnergy] =  Consumption3D...
                 end
             end                                                             % If not quorum, nothing needs to change
         end
-    else                                                                    % Single species, no competition
-        if mode == 1                                                        % If quorum bacteria
+    else
+        if mode == 1                                                        % In non-competing conditions, check if doing quorum-capable simulation
+            for i = 1 : nBacteria
+                if signals(bacteriaLocation(i)) >= threshold(3)             % Check if 'quorum' achieved, adjust feed and respiration rates accordingly 
+                    bacteriaEnergy(2, i)    = respRates(1, 2);                         
+                    bacteriaEnergy(3, i)    = feedRates(1, 2);
+                else                                                        % Turn off 'quorum'
+                    bacteriaEnergy(2, i)    = respRates(1, 1);                         
+                    bacteriaEnergy(3, i)    = feedRates(1, 1);
+                end
+            end
+        end
+    end
     
     for j = 1 : nLocations
         [~, resBacteria]    = find(bacteriaLocation == j);

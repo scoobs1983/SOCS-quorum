@@ -19,7 +19,7 @@ function [bacteriaLocation, bacteriaLattice, bacteriaEnergy] = Move3D...
         %% Death Check
         if(bacteriaEnergy(1, iBacteria(i)) < deathThres)
             bacteriaLocation(iBacteria(i))      = 0;                        % Tag bacteria for annihilation
-            bacteriaEnergy(:, iBacteria(i))     = [0; 0; 0];                
+            bacteriaEnergy(:, iBacteria(i))     = [0; 0; 0; 0];                
             temp                                = bacteriaLattice(index);
             bacteriaLattice(index)              = temp - 1;
         

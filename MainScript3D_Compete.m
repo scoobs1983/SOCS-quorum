@@ -10,10 +10,10 @@ set(0, 'defaultfigurecolor', [1, 1, 1]);
 %% Establish Quorum Mode
 mode                = input('Quorum = 1, No Quorum = 0              : ');
 competeStatus       = input('Competition = 1, No Competition = 0    : ');
-feedRates(1, :)     = [0.200    0.600];                                     % 1st Element: Low respiration due to low transcription, thus also low feedrate
+feedRates(1, :)     = [0.250    0.600];                                     % 1st Element: Low respiration due to low transcription, thus also low feedrate
 feedRates(2, :)     = [0.600    0.600]; 
-respRates(1, :)     = [0.050    0.150];                                     % 2nd Element: High respiration once transcription activated, enzyme enables higher feedrate
-respRates(2, :)     = [0.100    0.100];
+respRates(1, :)     = [0.075    0.200];                                     % 2nd Element: High respiration once transcription activated, enzyme enables higher feedrate
+respRates(2, :)     = [0.150    0.150];
 sigThres            = 4;                                                    % Just for quorum bacteria
 
 
@@ -34,9 +34,9 @@ feedThres           = 4.5;
 threshold           = [reproductionThres deathThres sigThres ...
                         nutrientThres feedThres];
 transparency        = 1 / crowdLimit;
-bacteriaColour      = [50, 205, 50]./255;                                   % Lime green colour for plotting
-nutrientColour      = [255, 69, 0]./255;                                    % Orange-red colour for plotting
-signalColour        = [0, 206, 209]./255;                                   % Dark turquoise for plotting
+bacColourQuorum     = [50, 205, 50]./255;                                   % Lime green colour for plotting
+bacColourNonQuorum  = [139, 0, 0]./255;                                     % Dark red for plotting
+nutrientColour      = [30, 144, 255]./255;                                  % Orange-red for plotting
     
 %% Initialise Vectors / Matrices
 
@@ -50,14 +50,14 @@ totalSignal         = zeros(1, iterations + 1);
 timeAxis            = 0 : iterations;
 
 %% Initialise Bacteria Population & Neighbour Registry
-[bacteriaLocation, bacteriaLattice] = ...
+[bacteriaLocation, bacteriaLattice, bacteriaEnergy] = ...
     InitCompeteBacteria3D(nBacteria, bacteriaLattice, crowdLimit, mode, ...
     competeStatus, feedRates, respRates);
 neighbours          = MooreNeighbours3D(bacteriaLattice);
 
 %% Record 'Initial' Summary Data
-signals                 = ChangeSignal3D(bacteriaLocation, signals, ...
-                            neighbours, baseSignal, sigThres);
+signals                 = ChangeSignal3D(bacteriaLocation, bacteriaEnergy,...
+                            signals, neighbours, baseSignal, sigThres);
 tQuorumBacteria(1)      = sum(bacteriaEnergy(4, :) == 1);
 tNonQuorumBacteria(1)   = sum(bacteriaEnergy(4, :) == 0);
 totalNutrients(1)       = sum(nutrients(:));
@@ -71,24 +71,40 @@ for i = 1 : iterations
     
     [nutrients, bacteriaEnergy] =  Consumption3D...
     (bacteriaLocation, bacteriaLattice, nutrients, bacteriaEnergy, ...
-    respRates, feedRates, signals, threshold, nutrientFlux, locations);
+    respRates, feedRates, signals, threshold, nutrientFlux, locations, ...
+    competeStatus, mode);
 
     [bacteriaLocation, bacteriaLattice, bacteriaEnergy] = ...
         Move3D(bacteriaLocation, bacteriaLattice, bacteriaEnergy, ...
         threshold, crowdLimit, neighbours);
     
     %% Summary Data
-    totalBacteria(i + 1)    = length(bacteriaLocation);
-    totalNutrients(i + 1)   = sum(nutrients(:));
-    totalSignal(i + 1)      = sum(signals(:));
+    tQuorumBacteria(i + 1)      = sum(bacteriaEnergy(4, :) == 1);
+    tNonQuorumBacteria(i + 1)   = sum(bacteriaEnergy(4, :) == 0);
+    totalNutrients(i + 1)       = sum(nutrients(:));
+    totalSignal(i + 1)          = sum(signals(:));
     
     %% Realtime Plots
-    [Y, X, Z]       = ind2sub([dim, dim, dim], bacteriaLocation);
-    figure(1)
+    indexQuorum     = find(bacteriaEnergy(4, :) == 1);
+    indexNonQuorum  = find(bacteriaEnergy(4, :) == 0);
+    [Y, X, Z]       = ind2sub([dim, dim, dim], ...
+        bacteriaLocation(indexQuorum));
+    [YY, XX, ZZ]    = ind2sub([dim, dim, dim], ...
+        bacteriaLocation(indexNonQuorum));
+    
+    mainFig = figure(1);
+    set(mainFig, 'Position', [40 100 1450 500])
     subplot(1, 3, 1)
     scatter3(Y, X, Z, 80, 'MarkerEdgeColor', 'none', 'MarkerFaceColor',...
-        bacteriaColour, 'MarkerFaceAlpha', transparency) 
+        bacColourQuorum, 'MarkerFaceAlpha', transparency) 
+    hold on
+    scatter3(YY, XX, ZZ, 80, 'MarkerEdgeColor', 'none', ...
+        'MarkerFaceColor', bacColourNonQuorum, 'MarkerFaceAlpha', ...
+        transparency) 
     axis([0, latticeSize, 0, latticeSize, 0, latticeSize])
+    legend({'Quorum', 'Non-Quorum'}, 'FontSize', 7, 'FontWeight', ...
+        'bold', 'Location', 'southoutside', 'Orientation', 'horizontal');
+    legend('boxoff');
     xlabel('X', 'FontSize', 10, 'FontWeight', 'bold', 'FontName',...
         'Times New Roman')
     ylabel('Y', 'FontSize', 10, 'FontWeight', 'bold', 'FontName',...
@@ -97,20 +113,27 @@ for i = 1 : iterations
         'Times New Roman')
     title('Bacteria in 3D Volume (periodic boundaries)', 'FontSize', 12,...
         'FontWeight', 'bold', 'FontName', 'Times New Roman') 
+    hold off
         
     subplot(1, 3, 2)
-    plot(timeAxis(1: i + 1), totalBacteria(1 : i + 1), ...
-        'Color', bacteriaColour, 'LineWidth', 2);
+    plot(timeAxis(1: i + 1), tQuorumBacteria(1 : i + 1), ...
+        'Color', bacColourQuorum, 'LineWidth', 2);
+    hold on
+    plot(timeAxis(1: i + 1), tNonQuorumBacteria(1 : i + 1), ...
+        'Color', bacColourNonQuorum, 'LineWidth', 2);
+    legend('Quorum Bacteria', 'Non-Quorum Bacteria');
+    legend('Location', 'northeast');
     title('Total Bacteria', 'FontSize', 10,...
         'FontWeight', 'bold', 'FontName', 'Times New Roman') 
-    axis([0, iterations, 0, 2000]);
+    axis([0, iterations, 0, latticeSize^2]);
+    hold off
     
     subplot(1, 3, 3)
     semilogy(timeAxis(1 : i + 1), totalNutrients(1 : i + 1), ...
-        'Color', nutrientColour, 'LineWidth', 2);
+        'Color', nutrientColour, 'LineWidth', 3);
     title('Total Nutrients', 'FontSize', 10,...
           'FontWeight', 'bold', 'FontName', 'Times New Roman') 
-    axis([0, iterations, 0, 100000]);
+    axis([0, iterations, 0, 10000]);
     
     drawnow update;
 
