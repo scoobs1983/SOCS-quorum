@@ -8,23 +8,19 @@ close all
 set(0, 'defaultfigurecolor', [1, 1, 1]);
 
 %% Establish Quorum Mode
-mode                = input('Quorum = 1, No Quorum = 0          : ');
-if mode             == 1                                                    % QUORUM conditions
-    feedRates       = [0.200    0.600];                                     % 1st Element: Low respiration due to low transcription, thus also low feedrate
-    respRates       = [0.050    0.150];                                     % 2nd Element: High respiration once transcription activated, enzyme enables higher feedrate
-    sigThres        = 4;
-    initialEnergy   = 3*respRates(1);                                       % So each bacteria can initially survive at least 3 time-steps
-else                                                                        % NO QUORUM conditions
-    feedRates       = [0.600    0.600];                                     % Bacteria have same feed & respiration rates regardless of neighbours
-    respRates       = [0.100    0.100];                                     % Thus, they can always eat a lot, but their respiration rates cannot go 'dormant'
-    sigThres        = inf;
-    initialEnergy   = 3*respRates(1);                                       % So each bacteria can initially survive at least 3 time-steps
-end
+mode                = input('Quorum = 1, No Quorum = 0              : ');
+competeStatus       = input('Competition = 1, No Competition = 0    : ');
+feedRates(1, :)     = [0.200    0.600];                                     % 1st Element: Low respiration due to low transcription, thus also low feedrate
+feedRates(2, :)     = [0.600    0.600]; 
+respRates(1, :)     = [0.050    0.150];                                     % 2nd Element: High respiration once transcription activated, enzyme enables higher feedrate
+respRates(2, :)     = [0.100    0.100];
+sigThres            = 4;                                                    % Just for quorum bacteria
+
 
 %% Other Parameters / Variables
-latticeSize         = input('Enter cube lattice size            : ');
-nBacteria           = input('Initial number of bacteria         : ');
-iterations          = input('Number of time steps / iterations  : ');
+latticeSize         = input('Enter cube lattice size                : ');
+nBacteria           = input('Initial number of bacteria             : ');
+iterations          = input('Number of time steps / iterations      : ');
 crowdLimit          = 5;
 nElements           = latticeSize^3;
 locations           = 1 : nElements;
@@ -43,35 +39,35 @@ nutrientColour      = [255, 69, 0]./255;                                    % Or
 signalColour        = [0, 206, 209]./255;                                   % Dark turquoise for plotting
     
 %% Initialise Vectors / Matrices
-bacteriaEnergy      = ones(3, nBacteria);                                   % 1st row = energy store, 2nd row = respiration rate, 3rd row = feed-rate 
-bacteriaEnergy(1, :)= initialEnergy;
-bacteriaEnergy(2, :)= respRates(1);
-bacteriaEnergy(3, :)= feedRates(1);
+
 bacteriaLattice     = zeros(dim, dim, dim);
 signals             = bacteriaLattice; 
 nutrients           = rand(1, nElements)*0.5;
-totalBacteria       = zeros(1, iterations + 1);
+tQuorumBacteria     = zeros(1, iterations + 1);
+tNonQuorumBacteria  = zeros(1, iterations + 1);
 totalNutrients      = zeros(1, iterations + 1);
 totalSignal         = zeros(1, iterations + 1);
 timeAxis            = 0 : iterations;
 
 %% Initialise Bacteria Population & Neighbour Registry
 [bacteriaLocation, bacteriaLattice] = ...
-    InitializeBacteria3D(nBacteria, bacteriaLattice, crowdLimit);
+    InitCompeteBacteria3D(nBacteria, bacteriaLattice, crowdLimit, mode, ...
+    competeStatus, feedRates, respRates);
 neighbours          = MooreNeighbours3D(bacteriaLattice);
 
 %% Record 'Initial' Summary Data
-signals             = ChangeSignal3D(bacteriaLocation, signals, ...
-                        neighbours, baseSignal, sigThres);
-totalBacteria(1)    = length(bacteriaLocation);
-totalNutrients(1)   = sum(nutrients(:));
-totalSignal(1)      = sum(signals(:));
+signals                 = ChangeSignal3D(bacteriaLocation, signals, ...
+                            neighbours, baseSignal, sigThres);
+tQuorumBacteria(1)      = sum(bacteriaEnergy(4, :) == 1);
+tNonQuorumBacteria(1)   = sum(bacteriaEnergy(4, :) == 0);
+totalNutrients(1)       = sum(nutrients(:));
+
 
 %% Begin Time-Evolution
 for i = 1 : iterations
     % disp(i);
-    signals         = ChangeSignal3D(bacteriaLocation, signals, ...
-        neighbours, baseSignal, sigThres);
+    signals         = ChangeSignal3D(bacteriaLocation, bacteriaEnergy, ...
+        signals, neighbours, baseSignal, sigThres);
     
     [nutrients, bacteriaEnergy] =  Consumption3D...
     (bacteriaLocation, bacteriaLattice, nutrients, bacteriaEnergy, ...
