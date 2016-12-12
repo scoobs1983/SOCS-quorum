@@ -30,16 +30,16 @@ function signals    = ChangeSignal(bacteriaLocation, signals, ...
         i0 = latticeSize/2;
         j0 = latticeSize/2;
         
-%         boxSize = 4*sqrt(latticeSize);
-%         for i = 1:boxSize
-%             for j = 1:boxSize
-%                 i1 = i0 + i - boxSize/2;
-%                 j1 = j0 + j - boxSize/2;
-%                 signals(i1, j1) = signals(i1,j1) - 3*baseSignal*exp(-norm([i0 j0] - [i1 j1])/(2*(3)^2));
-%             end
-%         end
+        boxSize = 4*sqrt(latticeSize);
+        for i = 1:boxSize
+            for j = 1:boxSize
+                i1 = i0 + i - boxSize/2;
+                j1 = j0 + j - boxSize/2;
+                signals(i1, j1) = signals(i1,j1) - 5*baseSignal*exp(-norm([i0 j0] - [i1 j1])/(2*(2)^2));
+            end
+        end
             
-        signals(i0-2*sqrt(latticeSize):i0 + 2*sqrt(latticeSize),j0-2*sqrt(latticeSize):j0 + 2*sqrt(latticeSize)) = -1;
+        %signals(i0-2*sqrt(latticeSize):i0 + 2*sqrt(latticeSize),j0-2*sqrt(latticeSize):j0 + 2*sqrt(latticeSize)) = -1;
     end
        
 end
