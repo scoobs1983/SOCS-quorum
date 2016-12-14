@@ -30,9 +30,9 @@ latticeSize         = input('Enter square lattice size          : ');
 nBacteria           = input('Initial number of bacteria         : ');
 iterations          = input('Number of time steps / iterations  : ');
 crowdLimit          = input('Max. bacteria at a location        : ');
-plotting            = 1;                                                    %Plotting enable/disable
+plotting            = 0;                                                    %Plotting enable/disable
 inhibitor           = 0;
-antiBiotics         = 0;
+antiBiotics         = 1;
 baseSignal          = 2;                                                    % Quorum Signal at location of each bacteria
 rho                 = 0;                                                 % Decay Rate
 repThres            = 2;
@@ -102,7 +102,7 @@ for i = 1 : iterations
     end
 end
 %% For looking at inhibition
-if inhibitor
+if inhibitor || antiBiotics
     figure(3)
     nutrients(proteins) = nutrients(proteins) + 10;
     imagesc(nutrients, [0 20]);
