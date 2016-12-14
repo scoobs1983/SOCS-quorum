@@ -91,7 +91,6 @@ for i = 1 : iterations
         subplot(2, 2, 3) 
         imagesc(signals, [-3 6]);
         title('Cumulative Quorum Signal Over Area');
-        colormap spring
         colorbar
 
         subplot(2, 2, 4)
