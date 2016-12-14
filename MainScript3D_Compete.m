@@ -17,7 +17,7 @@ mode                = input('Quorum = 1, No Quorum = 0              : ');
 competeStatus       = input('Competition = 1, No Competition = 0    : ');
 feedRates(1, :)     = [0.200    0.600];                                     % 1st Element: Low respiration due to low transcription, thus also low feedrate
 feedRates(2, :)     = [0.600    0.600]; 
-respRates(1, :)     = [0.075    0.150];                                     % 2nd Element: High respiration once transcription activated, enzyme enables higher feedrate
+respRates(1, :)     = [0.075    0.200];                                     % 2nd Element: High respiration once transcription activated, enzyme enables higher feedrate
 respRates(2, :)     = [0.150    0.150];
 sigThres            = 4;                                                    % Just for quorum bacteria
 
