@@ -25,6 +25,7 @@ iterations          = input('Number of time steps / iterations  : ');
 crowdLimit          = input('Max. bacteria at a location        : ');
 plotting            = 1;                                                    %Plotting enable/disable
 inhibitor           = 0;
+antiBiotics         = 0;
 baseSignal          = 2;                                                    % Quorum Signal at location of each bacteria
 rho                 = 0;                                                 % Decay Rate
 repThres            = 2;
@@ -55,7 +56,7 @@ for i = 1 : iterations
 
     [bacteriaLocation, bacteriaLattice, bacteriaEnergy] = ...
         Move(bacteriaLocation, bacteriaLattice, bacteriaEnergy, ...
-        threshold, crowdLimit, neighbours);
+        threshold, crowdLimit, neighbours, antiBiotics);
     
     location(i, :)  = ...
         [mean(bacteriaLocation(1,:)) mean(bacteriaLocation(2,:))];

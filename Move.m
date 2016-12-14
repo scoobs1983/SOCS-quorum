@@ -4,7 +4,7 @@
 
 function [bacteriaLocation, bacteriaLattice, bacteriaEnergy] = Move...
     (bacteriaLocation, bacteriaLattice, bacteriaEnergy, ...
-    threshold, crowdLimit, neighbours)
+    threshold, crowdLimit, neighbours, antiBiotics)
     % Description : TBC
     
     reproductionThres       = threshold(1);
@@ -12,8 +12,7 @@ function [bacteriaLocation, bacteriaLattice, bacteriaEnergy] = Move...
     nBacteria               = size(bacteriaLocation, 2);
     iBacteria               = randperm(nBacteria);
     latticeSize             = size(bacteriaLattice,2);
-
-    boxSize = 2*sqrt(latticeSize);
+    boxSize = 4*sqrt(latticeSize);
 
     
     
@@ -21,13 +20,14 @@ function [bacteriaLocation, bacteriaLattice, bacteriaEnergy] = Move...
     while(i <= nBacteria)
         i0  = bacteriaLocation(1,iBacteria(i));
         j0  = bacteriaLocation(2,iBacteria(i));
-        if (i0 > latticeSize/2 - boxSize/2 || i0 < latticeSize/2 + boxSize/2) && ...
-                (j0 > latticeSize/2 - boxSize/2 || j0 < latticeSize/2 + boxSize/2)
-            bacteriaEnergy(1, iBacteria(i)) = ...
-                bacteriaEnergy(1, iBacteria(i)) - ...
-                2*bacteriaEnergy(2, iBacteria(i));
+        if(antiBiotics)
+            if (i0 > latticeSize/2 - boxSize/2 && i0 < latticeSize/2 + boxSize/2) && ...
+                    (j0 > latticeSize/2 - boxSize/2 && j0 < latticeSize/2 + boxSize/2)
+                bacteriaEnergy(1, iBacteria(i)) = ...
+                    bacteriaEnergy(1, iBacteria(i)) - ...
+                    2.25*bacteriaEnergy(2, iBacteria(i));
+            end
         end
-        
         
         %% Death Check
         if(bacteriaEnergy(1,iBacteria(i)) < deathThres)
