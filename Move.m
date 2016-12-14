@@ -11,11 +11,23 @@ function [bacteriaLocation, bacteriaLattice, bacteriaEnergy] = Move...
     deathThres              = threshold(2);
     nBacteria               = size(bacteriaLocation, 2);
     iBacteria               = randperm(nBacteria);
+    latticeSize             = size(bacteriaLattice,2);
 
+    boxSize = 2*sqrt(latticeSize);
+
+    
+    
     i = 1;    % Initialise Counter
     while(i <= nBacteria)
         i0  = bacteriaLocation(1,iBacteria(i));
-        j0  = bacteriaLocation(2,iBacteria(i));       
+        j0  = bacteriaLocation(2,iBacteria(i));
+        if (i0 > latticeSize/2 - boxSize/2 || i0 < latticeSize/2 + boxSize/2) && ...
+                (j0 > latticeSize/2 - boxSize/2 || j0 < latticeSize/2 + boxSize/2)
+            bacteriaEnergy(1, iBacteria(i)) = ...
+                bacteriaEnergy(1, iBacteria(i)) - ...
+                2*bacteriaEnergy(2, iBacteria(i));
+        end
+        
         
         %% Death Check
         if(bacteriaEnergy(1,iBacteria(i)) < deathThres)
