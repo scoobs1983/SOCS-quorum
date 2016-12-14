@@ -143,8 +143,8 @@ for i = 1 : iterations
     
     drawnow update;
 
-%     %% Record Plots as Frames for a Movie
-%     bacteriaMovie(i)    = getframe;
+    %% Record Plots as Frames for a Movie
+    bacteriaMovie(i)    = getframe(figure(1));
     
 end
 
@@ -169,11 +169,11 @@ end
 %         'FontWeight', 'bold', 'FontName', 'Times New Roman') 
 % axis([0, iterations, 0.9*min(totalSignal), 1.1*max(totalSignal)]);
 
-% %% Save Movie
-% % Saves an *.avi* file into whatever is set as your 'Current Folder'. 
-% myVideo             = VideoWriter('Bacteria_Simulation.avi');
-% myVideo.FrameRate   = 10;                                                   % Default 30
-% myVideo.Quality     = 100;                                                  % Default 75
-% open(myVideo);
-% writeVideo(myVideo, bacteriaMovie);
-% close(myVideo);
+%% Save Movie
+% Saves an *.avi* file into whatever is set as your 'Current Folder'. 
+myVideo             = VideoWriter('Bacteria_Simulation.avi');
+myVideo.FrameRate   = 14;                                                   % Default 30
+myVideo.Quality     = 100;                                                  % Default 75
+open(myVideo);
+writeVideo(myVideo, bacteriaMovie);
+close(myVideo);

@@ -12,7 +12,7 @@ function [bacteriaLocation, bacteriaLattice, bacteriaEnergy] = Move...
     nBacteria               = size(bacteriaLocation, 2);
     iBacteria               = randperm(nBacteria);
     latticeSize             = size(bacteriaLattice,2);
-    boxSize = 4*sqrt(latticeSize);
+    boxSize = 4*sqrt(latticeSize); 
 
     
     
@@ -25,7 +25,7 @@ function [bacteriaLocation, bacteriaLattice, bacteriaEnergy] = Move...
                     (j0 > latticeSize/2 - boxSize/2 && j0 < latticeSize/2 + boxSize/2)
                 bacteriaEnergy(1, iBacteria(i)) = ...
                     bacteriaEnergy(1, iBacteria(i)) - ...
-                    2.25*bacteriaEnergy(2, iBacteria(i));
+                    2.5*bacteriaEnergy(2, iBacteria(i));
             end
         end
         

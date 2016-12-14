@@ -102,7 +102,7 @@ for i = 1 : iterations
     end
 end
 %% For looking at inhibition
-if inhibitor
+if inhibitor || antiBiotics
     figure(3)
     nutrients(proteins) = nutrients(proteins) + 10;
     imagesc(nutrients, [0 20]);
