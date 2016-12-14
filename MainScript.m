@@ -4,6 +4,13 @@
 clc
 clear all
 close all
+set(0, 'defaultfigurecolor', [55, 71, 79]./255);
+set(0, 'defaultaxescolor', [55, 71, 79]./255);
+set(0, 'defaulttextcolor', [245, 245, 245]./255);
+set(0, 'defaultaxesxcolor', [245, 245, 245]./255);
+set(0, 'defaultaxesycolor', [245, 245, 245]./255);
+set(0, 'defaultaxeszcolor', [245, 245, 245]./255);
+
 
 %% Establish Quorum Mode
 mode                = input('Quorum = 1, No Quorum = 0          : ');
@@ -84,6 +91,7 @@ for i = 1 : iterations
         subplot(2, 2, 3) 
         imagesc(signals, [-3 6]);
         title('Cumulative Quorum Signal Over Area');
+        colormap spring
         colorbar
 
         subplot(2, 2, 4)
