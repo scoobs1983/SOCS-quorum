@@ -15,9 +15,9 @@ set(0, 'defaultaxeszcolor', [245, 245, 245]./255);
 %% Establish Quorum Mode
 mode                = input('Quorum = 1, No Quorum = 0              : ');
 competeStatus       = input('Competition = 1, No Competition = 0    : ');
-feedRates(1, :)     = [0.400    1.000];                                     % 1st Element: Low respiration due to low transcription, thus also low feedrate
+feedRates(1, :)     = [0.300    1.000];                                     % 1st Element: Low respiration due to low transcription, thus also low feedrate
 feedRates(2, :)     = [0.750    0.750]; 
-respRates(1, :)     = [0.100    0.250];                                     % 2nd Element: High respiration once transcription activated, enzyme enables higher feedrate
+respRates(1, :)     = [0.100    0.220];                                     % 2nd Element: High respiration once transcription activated, enzyme enables higher feedrate
 respRates(2, :)     = [0.200    0.200];
 sigThres            = 6;                                                    % Just for quorum bacteria
 
@@ -31,7 +31,7 @@ nElements           = latticeSize^3;
 locations           = 1 : nElements;
 nutrientFlux        = latticeSize^2;
 dim                 = latticeSize;
-decay               = 0.5;
+decay               = 0.65;
 baseSignal          = 1;                                                    % Quorum Signal at location of each bacteria
 reproductionThres   = 1;
 deathThres          = 0.1;
