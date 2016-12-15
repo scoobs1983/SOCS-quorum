@@ -3,14 +3,15 @@
 % Group 2 : PROJECT (Quorum Sensing Simulation)
 clc
 clear all
-close all
+%close all
 set(0, 'defaultfigurecolor', [55, 71, 79]./255);
 set(0, 'defaultaxescolor', [55, 71, 79]./255);
 set(0, 'defaulttextcolor', [245, 245, 245]./255);
 set(0, 'defaultaxesxcolor', [245, 245, 245]./255);
 set(0, 'defaultaxesycolor', [245, 245, 245]./255);
 set(0, 'defaultaxeszcolor', [245, 245, 245]./255);
-
+bacColourQuorum     = [50, 205, 50]./255;                                   % Lime green colour for plotting
+bacColourNonQuorum  = [255, 0, 0]./255;                                     % Dark red for plotting
 
 %% Establish Quorum Mode
 mode                = input('Quorum = 1, No Quorum = 0          : ');
@@ -31,7 +32,7 @@ nBacteria           = input('Initial number of bacteria         : ');
 iterations          = input('Number of time steps / iterations  : ');
 crowdLimit          = input('Max. bacteria at a location        : ');
 plotting            = 0;                                                    %Plotting enable/disable
-inhibitor           = 1;
+inhibitor           = 0;
 antiBiotics         = 0;
 baseSignal          = 2;                                                    % Quorum Signal at location of each bacteria
 rho                 = 0;                                                 % Decay Rate
@@ -111,9 +112,21 @@ if inhibitor || antiBiotics
 end
 
 %% Summary Plots
-% figure(2)
-% plot(spread)
-% title('Std. Deviation of Bacterial Spread (Degree of Clustering)');
+figure(2)
+hold on
+if mode
+    plot(nrBacteria,'Color', bacColourQuorum, 'LineWidth', 2)
+else
+    plot(nrBacteria,'Color', bacColourNonQuorum, 'LineWidth', 2)
+end
+legendPlot  = legend('Quorum Bacteria', 'Non-Quorum Bacteria');
+set(legendPlot,'FontSize',14);
+legend('Location', 'northeast');
+title('Total Bacteria', 'FontSize', 14,...
+    'FontWeight', 'bold', 'FontName', 'Times New Roman')
+axis([0, iterations, 0, latticeSize^(1.5)]);
+xlabel('Time')
+ylabel('Number of Bacteria')
 
 
 
