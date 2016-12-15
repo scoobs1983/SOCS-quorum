@@ -15,11 +15,11 @@ set(0, 'defaultaxeszcolor', [245, 245, 245]./255);
 %% Establish Quorum Mode
 mode                = input('Quorum = 1, No Quorum = 0              : ');
 competeStatus       = input('Competition = 1, No Competition = 0    : ');
-feedRates(1, :)     = [0.200    0.600];                                     % 1st Element: Low respiration due to low transcription, thus also low feedrate
-feedRates(2, :)     = [0.600    0.600]; 
-respRates(1, :)     = [0.075    0.200];                                     % 2nd Element: High respiration once transcription activated, enzyme enables higher feedrate
-respRates(2, :)     = [0.150    0.150];
-sigThres            = 4;                                                    % Just for quorum bacteria
+feedRates(1, :)     = [0.400    1.000];                                     % 1st Element: Low respiration due to low transcription, thus also low feedrate
+feedRates(2, :)     = [0.750    0.750]; 
+respRates(1, :)     = [0.100    0.250];                                     % 2nd Element: High respiration once transcription activated, enzyme enables higher feedrate
+respRates(2, :)     = [0.200    0.200];
+sigThres            = 6;                                                    % Just for quorum bacteria
 
 
 %% Other Parameters / Variables
@@ -29,8 +29,9 @@ iterations          = input('Number of time steps / iterations      : ');
 crowdLimit          = 5;
 nElements           = latticeSize^3;
 locations           = 1 : nElements;
-nutrientFlux        = latticeSize^1.3;
+nutrientFlux        = latticeSize^2;
 dim                 = latticeSize;
+decay               = 0.5;
 baseSignal          = 1;                                                    % Quorum Signal at location of each bacteria
 reproductionThres   = 1;
 deathThres          = 0.1;
@@ -39,20 +40,23 @@ feedThres           = 4.5;
 threshold           = [reproductionThres deathThres sigThres ...
                         nutrientThres feedThres];
 transparency        = 1 / crowdLimit;
-bacColourQuorum     = [50, 205, 50]./255;                                   % Lime green colour for plotting
-bacColourNonQuorum  = [255, 0, 0]./255;                                     % Dark red for plotting
-nutrientColour      = [30, 144, 255]./255;                                  % Orange-red for plotting
+bacColourQuorumActive       = [204, 204, 50]./255;                          % Gold colour for plotting                          
+bacColourQuorumInActive     = [50, 205, 50]./255;                           % Lime green colour for plotting
+bacColourNonQuorum          = [255, 0, 0]./255;                             % Dark red for plotting
+nutrientColour              = [30, 144, 255]./255;                         % Orange-red for plotting
     
 %% Initialise Vectors / Matrices
 
-bacteriaLattice     = zeros(dim, dim, dim);
-signals             = bacteriaLattice; 
-nutrients           = rand(1, nElements)*0.5;
-tQuorumBacteria     = zeros(1, iterations + 1);
-tNonQuorumBacteria  = zeros(1, iterations + 1);
-totalNutrients      = zeros(1, iterations + 1);
-totalSignal         = zeros(1, iterations + 1);
-timeAxis            = 0 : iterations;
+bacteriaLattice             = zeros(dim, dim, dim);
+signals                     = bacteriaLattice; 
+nutrients                   = rand(1, nElements)*0.5;
+tQuorumActiveBacteria       = zeros(1, iterations + 1);
+tQuorumInactiveBacteria     = zeros(1, iterations + 1);
+tNonQuorumBacteria          = zeros(1, iterations + 1);
+tQuorum                     = zeros(1, iterations + 1);
+totalNutrients              = zeros(1, iterations + 1);
+totalSignal                 = zeros(1, iterations + 1);
+timeAxis                    = 0 : iterations;
 
 %% Initialise Bacteria Population & Neighbour Registry
 [bacteriaLocation, bacteriaLattice, bacteriaEnergy] = ...
@@ -61,19 +65,23 @@ timeAxis            = 0 : iterations;
 neighbours          = MooreNeighbours3D(bacteriaLattice);
 
 %% Record 'Initial' Summary Data
-signals                 = ChangeSignal3D(bacteriaLocation, bacteriaEnergy,...
-                            signals, neighbours, baseSignal, sigThres);
-tQuorumBacteria(1)      = sum(bacteriaEnergy(4, :) == 1);
-tNonQuorumBacteria(1)   = sum(bacteriaEnergy(4, :) == 0);
-totalNutrients(1)       = sum(nutrients(:));
+[signals, bacteriaEnergy]       = ChangeSignal3D(bacteriaLocation, ...
+                                    bacteriaEnergy, signals, neighbours,...
+                                    baseSignal, sigThres, decay);
+tQuorumActiveBacteria(1)        = sum(bacteriaEnergy(4, :) == 2);
+tQuorumInactiveBacteria(1)      = sum(bacteriaEnergy(4, :) == 1);
+tNonQuorumBacteria(1)           = sum(bacteriaEnergy(4, :) == 0);
+tQuorum(1)                      = tQuorumActiveBacteria(1) + ...
+                                    tQuorumInactiveBacteria(1);
+totalNutrients(1)               = sum(nutrients(:));
 
 
 %% Begin Time-Evolution
 for i = 1 : iterations
     % disp(i);
-    signals         = ChangeSignal3D(bacteriaLocation, bacteriaEnergy, ...
-        signals, neighbours, baseSignal, sigThres);
-    
+    [signals, bacteriaEnergy]   = ChangeSignal3D(bacteriaLocation, ...
+        bacteriaEnergy, signals, neighbours, baseSignal, sigThres, decay);
+       
     [nutrients, bacteriaEnergy] =  Consumption3D...
     (bacteriaLocation, bacteriaLattice, nutrients, bacteriaEnergy, ...
     respRates, feedRates, signals, threshold, nutrientFlux, locations, ...
@@ -84,31 +92,41 @@ for i = 1 : iterations
         threshold, crowdLimit, neighbours);
     
     %% Summary Data
-    tQuorumBacteria(i + 1)      = sum(bacteriaEnergy(4, :) == 1);
-    tNonQuorumBacteria(i + 1)   = sum(bacteriaEnergy(4, :) == 0);
-    totalNutrients(i + 1)       = sum(nutrients(:));
-    totalSignal(i + 1)          = sum(signals(:));
+    tQuorumActiveBacteria(i + 1)        = sum(bacteriaEnergy(4, :) == 2);
+    tQuorumInactiveBacteria(i + 1)      = sum(bacteriaEnergy(4, :) == 1);
+    tNonQuorumBacteria(i + 1)           = sum(bacteriaEnergy(4, :) == 0);
+    tQuorum(i + 1)                      = tQuorumActiveBacteria(i + 1) +...
+                                            tQuorumInactiveBacteria(i + 1);
+    totalNutrients(i + 1)               = sum(nutrients(:));
+    totalSignal(i + 1)                  = sum(signals(:));
     
     %% Realtime Plots
-    indexQuorum     = find(bacteriaEnergy(4, :) == 1);
-    indexNonQuorum  = find(bacteriaEnergy(4, :) == 0);
-    [Y, X, Z]       = ind2sub([dim, dim, dim], ...
-        bacteriaLocation(indexQuorum));
-    [YY, XX, ZZ]    = ind2sub([dim, dim, dim], ...
-        bacteriaLocation(indexNonQuorum));
+    indexQuorumActive       = find(bacteriaEnergy(4, :) == 2);
+    indexQuorumInActive     = find(bacteriaEnergy(4, :) == 1);
+    indexNonQuorum          = find(bacteriaEnergy(4, :) == 0);
+    [Y, X, Z]               = ind2sub([dim, dim, dim], ...
+                                bacteriaLocation(indexQuorumActive));
+    [YY, XX, ZZ]            = ind2sub([dim, dim, dim], ...
+                                bacteriaLocation(indexQuorumInActive));
+    [YYY, XXX, ZZZ]         = ind2sub([dim, dim, dim], ...
+                                bacteriaLocation(indexNonQuorum));
     
     mainFig = figure(1);
-    set(mainFig, 'Position', [40 100 1450 500])
+    set(mainFig, 'Position', [20 100 1400 500])
     subplot(1, 3, 1)
     scatter3(Y, X, Z, 80, 'MarkerEdgeColor', 'none', 'MarkerFaceColor',...
-        bacColourQuorum, 'MarkerFaceAlpha', transparency) 
+        bacColourQuorumActive, 'MarkerFaceAlpha', transparency) 
     hold on
     scatter3(YY, XX, ZZ, 80, 'MarkerEdgeColor', 'none', ...
+        'MarkerFaceColor', bacColourQuorumInActive, ...
+        'MarkerFaceAlpha', transparency) 
+    scatter3(YYY, XXX, ZZZ, 80, 'MarkerEdgeColor', 'none', ...
         'MarkerFaceColor', bacColourNonQuorum, 'MarkerFaceAlpha', ...
         transparency) 
     axis([0, latticeSize, 0, latticeSize, 0, latticeSize])
-    legend({'Quorum', 'Non-Quorum'}, 'FontSize', 14, 'FontWeight', ...
-        'bold', 'Location', 'southoutside', 'Orientation', 'horizontal');
+    legend({'Active Quorum', 'In-Active Quorum', 'Non-Quorum'}, ...
+        'FontSize', 11, 'FontWeight', 'bold', 'Location', ...
+        'southoutside', 'Orientation', 'horizontal');
     legend('boxoff');
     xlabel('X', 'FontSize', 10, 'FontWeight', 'bold', 'FontName',...
         'Times New Roman')
@@ -121,22 +139,25 @@ for i = 1 : iterations
     hold off
         
     subplot(1, 3, 2)
-    plot(timeAxis(1: i + 1), tQuorumBacteria(1 : i + 1), ...
-        'Color', bacColourQuorum, 'LineWidth', 2);
+    plot(timeAxis(1: i + 1), tQuorumActiveBacteria(1 : i + 1), '--',...
+        'Color', bacColourQuorumActive, 'LineWidth', 2);
     hold on
+    plot(timeAxis(1: i + 1), tQuorum(1 : i + 1), ...
+        'Color', bacColourQuorumInActive, 'LineWidth', 3);
     plot(timeAxis(1: i + 1), tNonQuorumBacteria(1 : i + 1), ...
-        'Color', bacColourNonQuorum, 'LineWidth', 2);
-    legendPlot  = legend('Quorum Bacteria', 'Non-Quorum Bacteria');
+        'Color', bacColourNonQuorum, 'LineWidth', 3);
+    legendPlot  = legend('Active Quorum Bacteria', ...
+        'Total Quorum Bacteria', 'Non-Quorum Bacteria');
     set(legendPlot,'FontSize',14);
     legend('Location', 'northeast');
     title('Total Bacteria', 'FontSize', 14,...
         'FontWeight', 'bold', 'FontName', 'Times New Roman') 
-    axis([0, iterations, 0, latticeSize^2]);
+    axis([0, iterations, 0, 0.25*latticeSize^3]);
     hold off
     
     subplot(1, 3, 3)
     plot(timeAxis(1 : i + 1), totalNutrients(1 : i + 1), ...
-        'Color', nutrientColour, 'LineWidth', 3);
+        'Color', nutrientColour, 'LineWidth', 4);
     title('Total Nutrients', 'FontSize', 14,...
           'FontWeight', 'bold', 'FontName', 'Times New Roman') 
     axis([0, iterations, 0 latticeSize^3]);
@@ -171,6 +192,7 @@ end
 
 %% Save Movie
 % Saves an *.avi* file into whatever is set as your 'Current Folder'. 
+bacteriaMovie(1)    = [];
 myVideo             = VideoWriter('Bacteria_Simulation.avi');
 myVideo.FrameRate   = 14;                                                   % Default 30
 myVideo.Quality     = 100;                                                  % Default 75

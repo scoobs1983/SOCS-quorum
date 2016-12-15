@@ -15,7 +15,7 @@ function [nutrients, bacteriaEnergy] =  Consumption3D...
     
     if competeStatus == 1                                                   % Check if 'competing' conditions
         for i = 1 : nBacteria                               
-            if bacteriaEnergy(4, i) == 1                                    % If quorum
+            if bacteriaEnergy(4, i) ~= 0                                    % If quorum
                 if signals(bacteriaLocation(i)) >= threshold(3)             % Check if 'quorum' achieved, adjust feed and respiration rates accordingly 
                     bacteriaEnergy(2, i)    = respRates(1, 2);                         
                     bacteriaEnergy(3, i)    = feedRates(1, 2);
@@ -70,7 +70,7 @@ function [nutrients, bacteriaEnergy] =  Consumption3D...
     end
     
     replenish               = (nutrientFlux)*rand;
-    nCellsReplenished       = randi(ceil(nLocations^(0.5)));
+    nCellsReplenished       = randi(ceil(nLocations^(0.75)));
     replenishPortion        = replenish/nCellsReplenished;
     replenishLocation       = datasample(locations, nCellsReplenished, ...
         'Replace', false);
