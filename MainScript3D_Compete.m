@@ -26,7 +26,7 @@ sigThres            = 6;                                                    % Ju
 latticeSize         = input('Enter cube lattice size                : ');
 nBacteria           = input('Initial number of bacteria             : ');
 iterations          = input('Number of time steps / iterations      : ');
-ProteinMode         = 1;
+ProteinMode         = 0;
 crowdLimit          = 5;
 nElements           = latticeSize^3;
 locations           = 1 : nElements;
@@ -144,27 +144,27 @@ for i = 1 : iterations
     hold off
         
     subplot(1, 3, 2)
-    if mode == 1 && competition == 1
+    if mode == 1 && competeStatus == 1
         plot(timeAxis(1: i + 1), tQuorumActiveBacteria(1 : i + 1), '--',...
-            'Color', bacColourQuorumActive, 'LineWidth', 2);
+            'Color', bacColourQuorumActive, 'LineWidth', 1);
         hold on
         plot(timeAxis(1: i + 1), tQuorum(1 : i + 1), ...
-            'Color', bacColourQuorumInActive, 'LineWidth', 3);
+            'Color', bacColourQuorumInActive, 'LineWidth', 2);
         plot(timeAxis(1: i + 1), tNonQuorumBacteria(1 : i + 1), ...
-            'Color', bacColourNonQuorum, 'LineWidth', 3);
+            'Color', bacColourNonQuorum, 'LineWidth', 2);
         legendPlot  = legend('Active Quorum Bacteria', ...
             'Total Quorum Bacteria', 'Non-Quorum Bacteria');
-    elseif mode == 1 && competition == 0
+    elseif mode == 1 && competeStatus == 0
         plot(timeAxis(1: i + 1), tQuorumActiveBacteria(1 : i + 1), '--',...
-            'Color', bacColourQuorumActive, 'LineWidth', 2);
+            'Color', bacColourQuorumActive, 'LineWidth', 1);
         hold on
         plot(timeAxis(1: i + 1), tQuorum(1 : i + 1), ...
-            'Color', bacColourQuorumInActive, 'LineWidth', 3);
+            'Color', bacColourQuorumInActive, 'LineWidth', 2);
         legendPlot  = legend('Active Quorum Bacteria', ...
             'Total Quorum Bacteria');
     elseif mode == 0
         plot(timeAxis(1: i + 1), tNonQuorumBacteria(1 : i + 1), ...
-            'Color', bacColourNonQuorum, 'LineWidth', 3);
+            'Color', bacColourNonQuorum, 'LineWidth', 2);
         legendPlot  = legend('Non-Quorum Bacteria');
     end
     set(legendPlot,'FontSize',14);
@@ -176,15 +176,15 @@ for i = 1 : iterations
     
     subplot(1, 3, 3)
     plot(timeAxis(1 : i + 1), totalNutrients(1 : i + 1), ...
-        'Color', nutrientColour, 'LineWidth', 4);
+        'Color', nutrientColour, 'LineWidth', 2.5);
     title('Total Nutrients', 'FontSize', 14,...
           'FontWeight', 'bold', 'FontName', 'Times New Roman') 
     axis([0, iterations, 0 2.5*latticeSize^3]);
     
     drawnow update;
 
-%     %% Record Plots as Frames for a Movie
-%     bacteriaMovie(i)    = getframe(figure(1));
+    %% Record Plots as Frames for a Movie
+    bacteriaMovie(i)    = getframe(figure(1));
     
 end
 
@@ -210,11 +210,11 @@ end
 % axis([0, iterations, 0.9*min(totalSignal), 1.1*max(totalSignal)]);
 
 %% Save Movie
-% Saves an *.avi* file into whatever is set as your 'Current Folder'. 
-% bacteriaMovie(1)    = [];
-% myVideo             = VideoWriter('Bacteria_Simulation.avi');
-% myVideo.FrameRate   = 14;                                                   % Default 30
-% myVideo.Quality     = 100;                                                  % Default 75
-% open(myVideo);
-% writeVideo(myVideo, bacteriaMovie);
-% close(myVideo);
+%Saves an *.avi* file into whatever is set as your 'Current Folder'. 
+bacteriaMovie(1)    = [];
+myVideo             = VideoWriter('Bacteria_Simulation.avi');
+myVideo.FrameRate   = 12;                                                   % Default 30
+myVideo.Quality     = 100;                                                  % Default 75
+open(myVideo);
+writeVideo(myVideo, bacteriaMovie);
+close(myVideo);
