@@ -15,28 +15,29 @@ set(0, 'defaultaxeszcolor', [245, 245, 245]./255);
 %% Establish Quorum Mode
 mode                = input('Quorum = 1, No Quorum = 0              : ');
 competeStatus       = input('Competition = 1, No Competition = 0    : ');
-feedRates(1, :)     = [0.300    1.000];                                     % 1st Element: Low respiration due to low transcription, thus also low feedrate
-feedRates(2, :)     = [0.750    0.750]; 
-respRates(1, :)     = [0.100    0.220];                                     % 2nd Element: High respiration once transcription activated, enzyme enables higher feedrate
+feedRates(1, :)     = [0.250    1.000];                                     % 1st Element: Low respiration due to low transcription, thus also low feedrate
+feedRates(2, :)     = [0.900    0.900]; 
+respRates(1, :)     = [0.100    0.250];                                     % 2nd Element: High respiration once transcription activated, enzyme enables higher feedrate
 respRates(2, :)     = [0.200    0.200];
-sigThres            = 6;                                                    % Just for quorum bacteria
+sigThres            = 5;                                                    % Just for quorum bacteria
 
 
 %% Other Parameters / Variables
 latticeSize         = input('Enter cube lattice size                : ');
 nBacteria           = input('Initial number of bacteria             : ');
 iterations          = input('Number of time steps / iterations      : ');
+ProteinMode         = 1;
 crowdLimit          = 5;
 nElements           = latticeSize^3;
 locations           = 1 : nElements;
-nutrientFlux        = latticeSize^2;
+nutrientFlux        = latticeSize^1.8;
 dim                 = latticeSize;
-decay               = 0.65;
-baseSignal          = 1;                                                    % Quorum Signal at location of each bacteria
-reproductionThres   = 1;
+decay               = 0.75;
+baseSignal          = 1.5;                                                    % Quorum Signal at location of each bacteria
+reproductionThres   = 1.5;
 deathThres          = 0.1;
 nutrientThres       = 0.5;
-feedThres           = 4.5;
+feedThres           = 5;
 threshold           = [reproductionThres deathThres sigThres ...
                         nutrientThres feedThres];
 transparency        = 1 / crowdLimit;
@@ -47,6 +48,7 @@ nutrientColour              = [30, 144, 255]./255;                         % Ora
     
 %% Initialise Vectors / Matrices
 
+proteins                    = [];
 bacteriaLattice             = zeros(dim, dim, dim);
 signals                     = bacteriaLattice; 
 nutrients                   = rand(1, nElements)*0.5;
@@ -81,11 +83,18 @@ for i = 1 : iterations
     % disp(i);
     [signals, bacteriaEnergy]   = ChangeSignal3D(bacteriaLocation, ...
         bacteriaEnergy, signals, neighbours, baseSignal, sigThres, decay);
-       
-    [nutrients, bacteriaEnergy] =  Consumption3D...
-    (bacteriaLocation, bacteriaLattice, nutrients, bacteriaEnergy, ...
-    respRates, feedRates, signals, threshold, nutrientFlux, locations, ...
-    competeStatus, mode);
+    
+    if ProteinMode == 1
+        [nutrients, bacteriaEnergy, proteins] =  Protein3D...
+            (bacteriaLocation, bacteriaLattice, nutrients, ...
+            bacteriaEnergy, respRates, feedRates, signals, threshold, ...
+            nutrientFlux, locations, competeStatus, mode, proteins);
+    else
+        [nutrients, bacteriaEnergy] =  Consumption3D...
+            (bacteriaLocation, bacteriaLattice, nutrients, bacteriaEnergy, ...
+            respRates, feedRates, signals, threshold, nutrientFlux, locations, ...
+            competeStatus, mode);
+    end
 
     [bacteriaLocation, bacteriaLattice, bacteriaEnergy] = ...
         Move3D(bacteriaLocation, bacteriaLattice, bacteriaEnergy, ...
@@ -152,7 +161,7 @@ for i = 1 : iterations
     legend('Location', 'northeast');
     title('Total Bacteria', 'FontSize', 14,...
         'FontWeight', 'bold', 'FontName', 'Times New Roman') 
-    axis([0, iterations, 0, 0.25*latticeSize^3]);
+    axis([0, iterations, 0, 0.2*latticeSize^3]);
     hold off
     
     subplot(1, 3, 3)
