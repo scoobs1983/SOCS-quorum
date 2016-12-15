@@ -17,9 +17,9 @@ function [signals, bacteriaEnergy]    = ChangeSignal3D(bacteriaLocation,...
         if bacteriaType == 1 || bacteriaType == 2                                               % Check if bacteria is a quorum-capable bacteria
             if signals(index) > sigThres
                 % disp('Enter')
-                newSignals(index)   = newSignals(index) + 3*baseSignal;
+                newSignals(index)   = newSignals(index) + 6*baseSignal;
                 newSignals(neighbours(index, :)) = ...
-                    newSignals(neighbours(index, :)) + 1.5*baseSignal;
+                    newSignals(neighbours(index, :)) + 3*baseSignal;
                 bacteriaEnergy(4, iBacteria) = 2;
             else
                 newSignals(index)   = newSignals(index) + baseSignal;

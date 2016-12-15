@@ -15,11 +15,11 @@ set(0, 'defaultaxeszcolor', [245, 245, 245]./255);
 %% Establish Quorum Mode
 mode                = input('Quorum = 1, No Quorum = 0              : ');
 competeStatus       = input('Competition = 1, No Competition = 0    : ');
-feedRates(1, :)     = [0.250    1.000];                                     % 1st Element: Low respiration due to low transcription, thus also low feedrate
-feedRates(2, :)     = [0.900    0.900]; 
-respRates(1, :)     = [0.100    0.250];                                     % 2nd Element: High respiration once transcription activated, enzyme enables higher feedrate
-respRates(2, :)     = [0.200    0.200];
-sigThres            = 5;                                                    % Just for quorum bacteria
+feedRates(1, :)     = [0.300    1.200];                                     % 1st Element: Low respiration due to low transcription, thus also low feedrate
+feedRates(2, :)     = [1.200    1.200]; 
+respRates(1, :)     = [0.130    0.450];                                     % 2nd Element: High respiration once transcription activated, enzyme enables higher feedrate
+respRates(2, :)     = [0.370    0.370];
+sigThres            = 6;                                                    % Just for quorum bacteria
 
 
 %% Other Parameters / Variables
@@ -30,12 +30,12 @@ ProteinMode         = 1;
 crowdLimit          = 5;
 nElements           = latticeSize^3;
 locations           = 1 : nElements;
-nutrientFlux        = latticeSize^1.8;
+nutrientFlux        = latticeSize^2;
 dim                 = latticeSize;
-decay               = 0.75;
+decay               = 0;
 baseSignal          = 1.5;                                                    % Quorum Signal at location of each bacteria
-reproductionThres   = 1.5;
-deathThres          = 0.1;
+reproductionThres   = 1;
+deathThres          = 0.09;
 nutrientThres       = 0.5;
 feedThres           = 5;
 threshold           = [reproductionThres deathThres sigThres ...
@@ -51,7 +51,7 @@ nutrientColour              = [30, 144, 255]./255;                         % Ora
 proteins                    = [];
 bacteriaLattice             = zeros(dim, dim, dim);
 signals                     = bacteriaLattice; 
-nutrients                   = rand(1, nElements)*0.5;
+nutrients                   = rand(1, nElements)*1.5;
 tQuorumActiveBacteria       = zeros(1, iterations + 1);
 tQuorumInactiveBacteria     = zeros(1, iterations + 1);
 tNonQuorumBacteria          = zeros(1, iterations + 1);
@@ -133,10 +133,6 @@ for i = 1 : iterations
         'MarkerFaceColor', bacColourNonQuorum, 'MarkerFaceAlpha', ...
         transparency) 
     axis([0, latticeSize, 0, latticeSize, 0, latticeSize])
-    legend({'Active Quorum', 'In-Active Quorum', 'Non-Quorum'}, ...
-        'FontSize', 11, 'FontWeight', 'bold', 'Location', ...
-        'southoutside', 'Orientation', 'horizontal');
-    legend('boxoff');
     xlabel('X', 'FontSize', 10, 'FontWeight', 'bold', 'FontName',...
         'Times New Roman')
     ylabel('Y', 'FontSize', 10, 'FontWeight', 'bold', 'FontName',...
@@ -148,18 +144,32 @@ for i = 1 : iterations
     hold off
         
     subplot(1, 3, 2)
-    plot(timeAxis(1: i + 1), tQuorumActiveBacteria(1 : i + 1), '--',...
-        'Color', bacColourQuorumActive, 'LineWidth', 2);
-    hold on
-    plot(timeAxis(1: i + 1), tQuorum(1 : i + 1), ...
-        'Color', bacColourQuorumInActive, 'LineWidth', 3);
-    plot(timeAxis(1: i + 1), tNonQuorumBacteria(1 : i + 1), ...
-        'Color', bacColourNonQuorum, 'LineWidth', 3);
-    legendPlot  = legend('Active Quorum Bacteria', ...
-        'Total Quorum Bacteria', 'Non-Quorum Bacteria');
+    if mode == 1 && competition == 1
+        plot(timeAxis(1: i + 1), tQuorumActiveBacteria(1 : i + 1), '--',...
+            'Color', bacColourQuorumActive, 'LineWidth', 2);
+        hold on
+        plot(timeAxis(1: i + 1), tQuorum(1 : i + 1), ...
+            'Color', bacColourQuorumInActive, 'LineWidth', 3);
+        plot(timeAxis(1: i + 1), tNonQuorumBacteria(1 : i + 1), ...
+            'Color', bacColourNonQuorum, 'LineWidth', 3);
+        legendPlot  = legend('Active Quorum Bacteria', ...
+            'Total Quorum Bacteria', 'Non-Quorum Bacteria');
+    elseif mode == 1 && competition == 0
+        plot(timeAxis(1: i + 1), tQuorumActiveBacteria(1 : i + 1), '--',...
+            'Color', bacColourQuorumActive, 'LineWidth', 2);
+        hold on
+        plot(timeAxis(1: i + 1), tQuorum(1 : i + 1), ...
+            'Color', bacColourQuorumInActive, 'LineWidth', 3);
+        legendPlot  = legend('Active Quorum Bacteria', ...
+            'Total Quorum Bacteria');
+    elseif mode == 0
+        plot(timeAxis(1: i + 1), tNonQuorumBacteria(1 : i + 1), ...
+            'Color', bacColourNonQuorum, 'LineWidth', 3);
+        legendPlot  = legend('Non-Quorum Bacteria');
+    end
     set(legendPlot,'FontSize',14);
     legend('Location', 'northeast');
-    title('Total Bacteria', 'FontSize', 14,...
+    title('Bacteria Population', 'FontSize', 14,...
         'FontWeight', 'bold', 'FontName', 'Times New Roman') 
     axis([0, iterations, 0, 0.2*latticeSize^3]);
     hold off
@@ -169,12 +179,12 @@ for i = 1 : iterations
         'Color', nutrientColour, 'LineWidth', 4);
     title('Total Nutrients', 'FontSize', 14,...
           'FontWeight', 'bold', 'FontName', 'Times New Roman') 
-    axis([0, iterations, 0 latticeSize^3]);
+    axis([0, iterations, 0 2.5*latticeSize^3]);
     
     drawnow update;
 
-    %% Record Plots as Frames for a Movie
-    bacteriaMovie(i)    = getframe(figure(1));
+%     %% Record Plots as Frames for a Movie
+%     bacteriaMovie(i)    = getframe(figure(1));
     
 end
 
@@ -201,10 +211,10 @@ end
 
 %% Save Movie
 % Saves an *.avi* file into whatever is set as your 'Current Folder'. 
-bacteriaMovie(1)    = [];
-myVideo             = VideoWriter('Bacteria_Simulation.avi');
-myVideo.FrameRate   = 14;                                                   % Default 30
-myVideo.Quality     = 100;                                                  % Default 75
-open(myVideo);
-writeVideo(myVideo, bacteriaMovie);
-close(myVideo);
+% bacteriaMovie(1)    = [];
+% myVideo             = VideoWriter('Bacteria_Simulation.avi');
+% myVideo.FrameRate   = 14;                                                   % Default 30
+% myVideo.Quality     = 100;                                                  % Default 75
+% open(myVideo);
+% writeVideo(myVideo, bacteriaMovie);
+% close(myVideo);
