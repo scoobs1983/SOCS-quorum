@@ -122,7 +122,7 @@ for i = 1 : iterations
     
     mainFig = figure(1);
     set(mainFig, 'Position', [20 100 1400 500])
-    subplot(1, 3, 1)
+    subplot(3, 1, 1)
     scatter3(Y, X, Z, 80, 'MarkerEdgeColor', 'none', 'MarkerFaceColor',...
         bacColourQuorumActive, 'MarkerFaceAlpha', transparency) 
     hold on
@@ -143,7 +143,7 @@ for i = 1 : iterations
         'FontWeight', 'bold', 'FontName', 'Times New Roman') 
     hold off
         
-    subplot(1, 3, 2)
+    subplot(3, 1, 2)
     if mode == 1 && competeStatus == 1
         plot(timeAxis(1: i + 1), tQuorumActiveBacteria(1 : i + 1), '--',...
             'Color', bacColourQuorumActive, 'LineWidth', 2);
@@ -174,7 +174,7 @@ for i = 1 : iterations
     axis([0, iterations, 0, 0.2*latticeSize^3]);
     hold off
     
-    subplot(1, 3, 3)
+    subplot(3, 1, 3)
     plot(timeAxis(1 : i + 1), totalNutrients(1 : i + 1), ...
         'Color', nutrientColour, 'LineWidth', 4);
     title('Total Nutrients', 'FontSize', 14,...
