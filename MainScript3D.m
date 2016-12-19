@@ -121,7 +121,7 @@ for i = 1 : iterations
                                 bacteriaLocation(indexNonQuorum));
     
     mainFig = figure(1);
-    set(mainFig, 'Position', [20 100 1400 500])
+    set(mainFig, 'Position', [20 20 340 850])
     subplot(3, 1, 1)
     scatter3(Y, X, Z, 80, 'MarkerEdgeColor', 'none', 'MarkerFaceColor',...
         bacColourQuorumActive, 'MarkerFaceAlpha', transparency) 
@@ -139,7 +139,7 @@ for i = 1 : iterations
         'Times New Roman')
     zlabel('Z', 'FontSize', 10, 'FontWeight', 'bold', 'FontName',...
         'Times New Roman')
-    title('Bacteria in 3D Volume (periodic boundaries)', 'FontSize', 14,...
+    title('Bacteria in 3D Volume (periodic boundaries)', 'FontSize', 11,...
         'FontWeight', 'bold', 'FontName', 'Times New Roman') 
     hold off
         
@@ -167,9 +167,9 @@ for i = 1 : iterations
             'Color', bacColourNonQuorum, 'LineWidth', 3);
         legendPlot  = legend('Non-Quorum Bacteria');
     end
-    set(legendPlot,'FontSize',14);
+    set(legendPlot,'FontSize',11);
     legend('Location', 'northeast');
-    title('Bacteria Population', 'FontSize', 14,...
+    title('Bacteria Population', 'FontSize', 12,...
         'FontWeight', 'bold', 'FontName', 'Times New Roman') 
     axis([0, iterations, 0, 0.2*latticeSize^3]);
     hold off
@@ -177,7 +177,7 @@ for i = 1 : iterations
     subplot(3, 1, 3)
     plot(timeAxis(1 : i + 1), totalNutrients(1 : i + 1), ...
         'Color', nutrientColour, 'LineWidth', 4);
-    title('Total Nutrients', 'FontSize', 14,...
+    title('Total Nutrients', 'FontSize', 11,...
           'FontWeight', 'bold', 'FontName', 'Times New Roman') 
     axis([0, iterations, 0 2.5*latticeSize^3]);
     
