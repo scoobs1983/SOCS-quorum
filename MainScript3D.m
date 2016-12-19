@@ -5,12 +5,12 @@
 clc
 clear all
 close all
-set(0, 'defaultfigurecolor', [55, 71, 79]./255);
-set(0, 'defaultaxescolor', [55, 71, 79]./255);
-set(0, 'defaulttextcolor', [245, 245, 245]./255);
-set(0, 'defaultaxesxcolor', [245, 245, 245]./255);
-set(0, 'defaultaxesycolor', [245, 245, 245]./255);
-set(0, 'defaultaxeszcolor', [245, 245, 245]./255);
+set(0, 'defaultfigurecolor', [255, 255, 255]./255);
+set(0, 'defaultaxescolor', [255, 255, 255]./255);
+set(0, 'defaulttextcolor', [0, 0, 0]./255);
+set(0, 'defaultaxesxcolor', [0, 0, 0]./255);
+set(0, 'defaultaxesycolor', [0, 0, 0]./255);
+set(0, 'defaultaxeszcolor', [0, 0, 0]./255);
 
 %% Establish Quorum Mode
 mode                = input('Quorum = 1, No Quorum = 0              : ');
