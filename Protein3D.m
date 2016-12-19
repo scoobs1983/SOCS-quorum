@@ -5,7 +5,7 @@
 function [nutrients, bacteriaEnergy, proteins] =  Protein3D...
     (bacteriaLocation, bacteriaLattice, nutrients, bacteriaEnergy, ...
     respRates, feedRates, signals, threshold, nutrientFlux, locations, ...
-    competeStatus, mode, proteins)
+    competeStatus, mode, proteins, timeStep, neighbours)
     % Performs one round of consumption for all bacteria (according to 
     % fixed feed rate or splitting whatever is left, adjusting
     % respiration rates and energy stores as necessary
@@ -81,9 +81,11 @@ function [nutrients, bacteriaEnergy, proteins] =  Protein3D...
     for ii = replenishLocation
         nutrients(ii)       = nutrients(ii) + replenishPortion;
     end
-    for i = 2
-        index = ceil(nLocations*rand);
-        nutrients(index) = nutrients(index) + 5;
+    
+    if rem(timeStep, 50) == 0                                               % Every 50 time steps, spike a moore neighbourhood
+        index               = randi(nLocations);
+        index               = neighbours(index, :);
+        nutrients(index)    = nutrients(index) + 5;
         proteins = [proteins index];
     end
 end
