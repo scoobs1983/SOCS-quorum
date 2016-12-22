@@ -17,8 +17,8 @@ mode                = input('Quorum = 1, No Quorum = 0              : ');
 competeStatus       = input('Competition = 1, No Competition = 0    : ');
 feedRates(1, :)     = [0.300    1.200];                                     % 1st Element: Low respiration due to low transcription, thus also low feedrate
 feedRates(2, :)     = [1.200    1.200]; 
-respRates(1, :)     = [0.130    0.450];                                     % 2nd Element: High respiration once transcription activated, enzyme enables higher feedrate
-respRates(2, :)     = [0.370    0.370];
+respRates(1, :)     = [0.125    0.450];                                     % 2nd Element: High respiration once transcription activated, enzyme enables higher feedrate
+respRates(2, :)     = [0.380    0.380];
 sigThres            = 6;                                                    % Just for quorum bacteria
 
 
@@ -26,7 +26,7 @@ sigThres            = 6;                                                    % Ju
 latticeSize         = input('Enter cube lattice size                : ');
 nBacteria           = input('Initial number of bacteria             : ');
 iterations          = input('Number of time steps / iterations      : ');
-ProteinMode         = 1;
+ProteinMode         = 0;
 crowdLimit          = 5;
 nElements           = latticeSize^3;
 locations           = 1 : nElements;
@@ -41,7 +41,7 @@ feedThres           = 5;
 threshold           = [reproductionThres deathThres sigThres ...
                         nutrientThres feedThres];
 transparency        = 1 / crowdLimit;
-bacColourQuorumActive       = [204, 204, 50]./255;                          % Gold colour for plotting                          
+bacColourQuorumActive       = [255, 165, 0]./255;                          % Gold colour for plotting                          
 bacColourQuorumInActive     = [50, 205, 50]./255;                           % Lime green colour for plotting
 bacColourNonQuorum          = [255, 0, 0]./255;                             % Dark red for plotting
 nutrientColour              = [30, 144, 255]./255;                         % Orange-red for plotting
@@ -122,50 +122,50 @@ for i = 1 : iterations
                                 bacteriaLocation(indexNonQuorum));
     
     mainFig = figure(1);
-    set(mainFig, 'Position', [20 20 340 850])
-    subplot(3, 1, 1)
-    scatter3(Y, X, Z, 80, 'MarkerEdgeColor', 'none', 'MarkerFaceColor',...
-        bacColourQuorumActive, 'MarkerFaceAlpha', transparency) 
-    hold on
-    scatter3(YY, XX, ZZ, 80, 'MarkerEdgeColor', 'none', ...
-        'MarkerFaceColor', bacColourQuorumInActive, ...
-        'MarkerFaceAlpha', transparency) 
-    scatter3(YYY, XXX, ZZZ, 80, 'MarkerEdgeColor', 'none', ...
-        'MarkerFaceColor', bacColourNonQuorum, 'MarkerFaceAlpha', ...
-        transparency) 
-    axis([0, latticeSize, 0, latticeSize, 0, latticeSize])
-    xlabel('X', 'FontSize', 10, 'FontWeight', 'bold', 'FontName',...
-        'Times New Roman')
-    ylabel('Y', 'FontSize', 10, 'FontWeight', 'bold', 'FontName',...
-        'Times New Roman')
-    zlabel('Z', 'FontSize', 10, 'FontWeight', 'bold', 'FontName',...
-        'Times New Roman')
-    title('Bacteria in 3D Volume (periodic boundaries)', 'FontSize', 11,...
-        'FontWeight', 'bold', 'FontName', 'Times New Roman') 
-    hold off
+%     set(mainFig, 'Position', [20 20 340 850])
+%     subplot(3, 1, 1)
+%     scatter3(Y, X, Z, 80, 'MarkerEdgeColor', 'none', 'MarkerFaceColor',...
+%         bacColourQuorumActive, 'MarkerFaceAlpha', transparency) 
+%     hold on
+%     scatter3(YY, XX, ZZ, 80, 'MarkerEdgeColor', 'none', ...
+%         'MarkerFaceColor', bacColourQuorumInActive, ...
+%         'MarkerFaceAlpha', transparency) 
+%     scatter3(YYY, XXX, ZZZ, 80, 'MarkerEdgeColor', 'none', ...
+%         'MarkerFaceColor', bacColourNonQuorum, 'MarkerFaceAlpha', ...
+%         transparency) 
+%     axis([0, latticeSize, 0, latticeSize, 0, latticeSize])
+%     xlabel('X', 'FontSize', 10, 'FontWeight', 'bold', 'FontName',...
+%         'Times New Roman')
+%     ylabel('Y', 'FontSize', 10, 'FontWeight', 'bold', 'FontName',...
+%         'Times New Roman')
+%     zlabel('Z', 'FontSize', 10, 'FontWeight', 'bold', 'FontName',...
+%         'Times New Roman')
+%     title('Bacteria in 3D Volume (periodic boundaries)', 'FontSize', 11,...
+%         'FontWeight', 'bold', 'FontName', 'Times New Roman') 
+%     hold off
         
-    subplot(3, 1, 2)
+    subplot(2, 1, 1)
     if mode == 1 && competeStatus == 1
-        plot(timeAxis(1: i + 1), tQuorumActiveBacteria(1 : i + 1), '--',...
-            'Color', bacColourQuorumActive, 'LineWidth', 2);
+        plot(timeAxis(1: i + 1), tQuorumActiveBacteria(1 : i + 1), '-',...
+            'Color', bacColourQuorumActive, 'LineWidth', 1);
         hold on
         plot(timeAxis(1: i + 1), tQuorum(1 : i + 1), ...
-            'Color', bacColourQuorumInActive, 'LineWidth', 3);
+            'Color', bacColourQuorumInActive, 'LineWidth', 1.5);
         plot(timeAxis(1: i + 1), tNonQuorumBacteria(1 : i + 1), ...
-            'Color', bacColourNonQuorum, 'LineWidth', 3);
+            'Color', bacColourNonQuorum, 'LineWidth', 1.5);
         legendPlot  = legend('Active Quorum Bacteria', ...
             'Total Quorum Bacteria', 'Non-Quorum Bacteria');
     elseif mode == 1 && competeStatus == 0
-        plot(timeAxis(1: i + 1), tQuorumActiveBacteria(1 : i + 1), '--',...
-            'Color', bacColourQuorumActive, 'LineWidth', 2);
+        plot(timeAxis(1: i + 1), tQuorumActiveBacteria(1 : i + 1), '-',...
+            'Color', bacColourQuorumActive, 'LineWidth', 1);
         hold on
         plot(timeAxis(1: i + 1), tQuorum(1 : i + 1), ...
-            'Color', bacColourQuorumInActive, 'LineWidth', 3);
+            'Color', bacColourQuorumInActive, 'LineWidth', 1.5);
         legendPlot  = legend('Active Quorum Bacteria', ...
             'Total Quorum Bacteria');
     elseif mode == 0
         plot(timeAxis(1: i + 1), tNonQuorumBacteria(1 : i + 1), ...
-            'Color', bacColourNonQuorum, 'LineWidth', 3);
+            'Color', bacColourNonQuorum, 'LineWidth', 1.5);
         legendPlot  = legend('Non-Quorum Bacteria');
     end
     set(legendPlot,'FontSize',11);
@@ -175,9 +175,9 @@ for i = 1 : iterations
     axis([0, iterations, 0, 0.2*latticeSize^3]);
     hold off
     
-    subplot(3, 1, 3)
+    subplot(2, 1, 2)
     plot(timeAxis(1 : i + 1), totalNutrients(1 : i + 1), ...
-        'Color', nutrientColour, 'LineWidth', 4);
+        'Color', nutrientColour, 'LineWidth', 3);
     title('Total Nutrients', 'FontSize', 11,...
           'FontWeight', 'bold', 'FontName', 'Times New Roman') 
     axis([0, iterations, 0 2.5*latticeSize^3]);
